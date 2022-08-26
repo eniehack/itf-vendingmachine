@@ -6,6 +6,14 @@
 
 <div id="map"></div>
 
+{#await $here}
+    <p>位置情報取得中</p>
+{:then}
+    <p>{$here.longitude},{$here.latitude}</p>
+{:catch error}
+    Error({error.code}): {error.message}
+{/await}
+
 {#await find_vendingmachine()}
     waiting...
 {:then result}
@@ -20,13 +28,6 @@
 <p>{result.osm3s.copyright}</p>
 {:catch error}
 <p style="color: red">{error.message}</p>
-{/await}
-
-{#await $here}
-{:then}
-{$here.longitude},{$here.latitude}
-{:catch error}
-    {error}
 {/await}
 
 <style>
@@ -59,6 +60,7 @@ const vending = new Map<string, string>([
 ]);
 
 let map;
+ let unsubscribeCoords;
 
 onMount(() => {
      map = L.map('map').setView([36.1070,140.1019], 13);
@@ -67,6 +69,11 @@ onMount(() => {
          attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
      }).addTo(map);
 
+     unsubscribeCoords = here.subscribe(coord => {
+         if (coord === null) return;
+         console.log(coord);
+         map.setview([coord.latitude, coord.longitude]);
+     })
  });
 
 const find_vendingmachine = async () => {
@@ -95,11 +102,6 @@ const find_vendingmachine = async () => {
     }
 }
 
- const unsubscribeCoords = here.subscribe(coord => {
-     if (coord === null) return;
-     console.log(coord);
-     L.setview([coord.latitude, coord.longitude]);
- })
 
  onDestroy(unsubscribeCoords);
 </script>

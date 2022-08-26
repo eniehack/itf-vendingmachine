@@ -43,7 +43,7 @@ function watchPosition(): [Promise<GeolocationPosition>, number] {
     ];
 }
 
-export const here: Readable<Promise<GeolocationCoordinates>> = readable(initGeolocationAPI(), (set) => {
+export const here: Readable<Promise<GeolocationCoordinates>> = readable(null, (set) => {
     const [watch, watchID] = watchPosition();
 
     set(watch.then(pos => pos.coords));
