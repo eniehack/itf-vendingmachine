@@ -22,9 +22,12 @@
 <p style="color: red">{error.message}</p>
 {/await}
 
-{#if $here}
-    {$here.longitude},{$here.latitude}
-{/if}
+{#await $here}
+{:then}
+{$here.longitude},{$here.latitude}
+{:catch error}
+    {error}
+{/await}
 
 <style>
 #map {

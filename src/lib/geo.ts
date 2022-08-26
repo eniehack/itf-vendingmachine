@@ -1,21 +1,54 @@
-import { readable } from "svelte/store";
+import { readable, type Readable } from "svelte/store";
 
-export const here = readable(null, function start(set) {
-    if ("geolocation" in navigator) {
+//const getCurrentPosition: Promise<GeolocationPosition> = () => {
+function getCurrentPosition(): Promise<GeolocationPosition> {
+    return new Promise((
+        resolve: (value?: GeolocationPosition) => void,
+        reject: (reason?: GeolocationPositionError) => void
+    ) => {
         navigator.geolocation.getCurrentPosition((position) => {
-            console.log(position);
-            set(position.coords);
+            resolve(position);
+        }, (err) => {
+            reject(err);
         });
+    })
+}
 
-        const coordWatchID = navigator.geolocation.watchPosition((position) => {
-            console.log(position);
-            set(position.coords);
-        });
+//const initGeolocationAPI: Promise<GeolocationCoordinates> = async () => {
+async function initGeolocationAPI() : Promise<GeolocationCoordinates>  {
+    return (await getCurrentPosition())
+                .then(pos => {
+                    if (pos === null) return;
+                    pos.coords
+                })
+                .catch(err => err.code)
+            ;
+}
 
-        return function stop() {
-            navigator.geolocation.clearWatch(coordWatchID);
-        }
-    } else {
-        return null;
+function watchPosition(): [Promise<GeolocationPosition>, number] {
+    let watchID: number;
+    return [
+        new Promise((
+            resolve: (value?: GeolocationPosition) => void,
+            reject: (reason?: GeolocationPositionError) => void
+        ) => {
+            watchID = navigator.geolocation.watchPosition((position) => {
+                resolve(position);
+            }, (err) => {
+                reject(err);
+                navigator.geolocation.clearWatch(watchID);
+            });
+        }),
+        watchID
+    ];
+}
+
+export const here: Readable<Promise<GeolocationCoordinates>> = readable(initGeolocationAPI(), (set) => {
+    const [watch, watchID] = watchPosition();
+
+    set(watch.then(pos => pos.coords));
+
+    return () => {
+       navigator.geolocation.clearWatch(watchID);
     }
-});
+})
