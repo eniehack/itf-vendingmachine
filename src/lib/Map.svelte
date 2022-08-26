@@ -22,6 +22,10 @@
 <p style="color: red">{error.message}</p>
 {/await}
 
+{#if $here}
+    {$here.longitude},{$here.latitude}
+{/if}
+
 <style>
 #map {
   width: 500px;
@@ -31,7 +35,9 @@
 
 <script lang="ts">
 import { onMount } from "svelte";
+ import { onDestroy, onMount } from "svelte";
  import L from "leaflet";
+ import { here } from "./geo";
 
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
@@ -87,4 +93,11 @@ const find_vendingmachine = async () => {
     }
 }
 
+ const unsubscribeCoords = here.subscribe(coord => {
+     if (coord === null) return;
+     console.log(coord);
+     L.setview([coord.latitude, coord.longitude]);
+ })
+
+ onDestroy(unsubscribeCoords);
 </script>
