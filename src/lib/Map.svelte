@@ -9,7 +9,7 @@
 {#await $here}
     <p>位置情報取得中</p>
 {:then coord}
-    <!--<p>{coord.longitude},{coord.latitude}</p>-->
+    <p>{coord.longitude},{coord.latitude}</p>
     {coord}
 {:catch error}
     Error({error.code}): {error.message}
