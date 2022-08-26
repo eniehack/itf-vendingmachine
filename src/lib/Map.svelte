@@ -34,7 +34,6 @@
 </style>
 
 <script lang="ts">
-import { onMount } from "svelte";
  import { onDestroy, onMount } from "svelte";
  import L from "leaflet";
  import { here } from "./geo";
