@@ -73,7 +73,7 @@ onMount(() => {
      unsubscribeCoords = here.subscribe(coord => {
          if (coord === null) return;
          console.log(coord);
-         map.setview([coord.latitude, coord.longitude]);
+         map.panTo(new L,LatLng(coord.latitude, coord.longitude));
      })
  });
 
