@@ -16,13 +16,7 @@ function getCurrentPosition(): Promise<GeolocationPosition> {
 
 //const initGeolocationAPI: Promise<GeolocationCoordinates> = async () => {
 async function initGeolocationAPI() : Promise<GeolocationCoordinates>  {
-    return (await getCurrentPosition())
-                .then(pos => {
-                    if (pos === null) return;
-                    pos.coords
-                })
-                .catch(err => err.code)
-            ;
+    return getCurrentPosition().then(pos => pos.coords);
 }
 
 function watchPosition(): [Promise<GeolocationPosition>, number] {
@@ -43,7 +37,7 @@ function watchPosition(): [Promise<GeolocationPosition>, number] {
     ];
 }
 
-export const here: Readable<Promise<GeolocationCoordinates>> = readable(null, (set) => {
+export const here: Readable<Promise<GeolocationCoordinates>> = readable(initGeolocationAPI(), (set) => {
     const [watch, watchID] = watchPosition();
 
     set(watch.then(pos => pos.coords));

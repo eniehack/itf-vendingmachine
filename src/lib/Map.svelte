@@ -76,6 +76,8 @@ onMount(() => {
      })
  });
 
+ onDestroy(unsubscribeCoords);
+
 const find_vendingmachine = async () => {
     let resp = await fetch("https://lz4.overpass-api.de/api/interpreter", {
         method: "POST",
@@ -103,5 +105,4 @@ const find_vendingmachine = async () => {
 }
 
 
- onDestroy(unsubscribeCoords);
 </script>
