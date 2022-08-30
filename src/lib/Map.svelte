@@ -8,23 +8,21 @@
 
 {#await $here}
     <p>位置情報取得中</p>
-{:then coord}
-    <p>{coord.longitude},{coord.latitude}</p>
-    {coord}
 {:catch error}
-    Error({error.code}): {error.message}
+    <p>位置情報取得エラー(エラーコード: {error.code}): {error.message}</p>
 {/await}
+
+{#if $machine !== null}
+    <section>
+        <h1 id="{$machine.id}">自動販売機</h1>
+        <a href="geo:{$machine.lat},{$machine.lon}">geo URI</a>
+        <p>取り扱っているもの: {vending.get($machine.tags.vending)}</p>
+    </section>
+{/if}
 
 {#await find_vendingmachine()}
     waiting...
 {:then result}
-{#each result.elements as elem}
-    <section>
-        <h1 id="{elem.id}">自動販売機</h1>
-        <a href="geo:{elem.lat},{elem.lon}">geo URI</a>
-        <p>取り扱っているもの: {vending.get(elem.tags.vending)}
-    </section>
-{/each}
 <p>データは{result.osm3s.timestamp_areas_base}頃のものです</p>
 <p>{result.osm3s.copyright}</p>
 {:catch error}
@@ -43,6 +41,7 @@
  import L from "leaflet";
  import { LatLng, Map as LFMap } from "leaflet";
  import { here } from "./geo";
+import { writable } from "svelte/store";
 
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
@@ -63,6 +62,7 @@ const vending = new Map<string, string>([
 
 let map: LFMap;
 let coordWatchID: number;
+ let json;
 
 onMount(() => {
      map = L.map('map').setView([36.1070,140.1019], 13);
@@ -87,7 +87,7 @@ onMount(() => {
          if (coord === null) return;
          console.log(coord);
          map.flyTo($here);
-     })
+     });
  });
 
  onDestroy(() => {
@@ -105,11 +105,18 @@ const find_vendingmachine = async () => {
     });
 
     if (resp.ok) {
-        let json = await resp.json();
+        json = await resp.json();
         json["elements"].forEach(elem => {
-            L.marker([elem["lat"], elem["lon"]])
-             .addTo(map)
-             .bindPopup(`<a href="#${elem["id"]}">vd</a>`);
+            let marker = L.marker([elem["lat"], elem["lon"]])
+                          .addTo(map)
+                          .bindPopup(`${elem["id"]}`);
+            marker.on("click", (e) => {
+                //detail_id.set(e.target._popup._content);
+                let m = json["elements"].filter(elem => elem["id"] == e.target._popup._content);
+                console.log(m[0]);
+                machine.set(m[0]);
+                console.log(e.target._popup._content);
+            });
         });
 
         console.log(json);
@@ -120,5 +127,6 @@ const find_vendingmachine = async () => {
     }
 }
 
+ const machine = writable(null);
 
 </script>
