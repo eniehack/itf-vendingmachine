@@ -6,6 +6,15 @@
 
 <div id="map"></div>
 
+{#await $here}
+    <p>位置情報取得中</p>
+{:then coord}
+    <p>{coord.longitude},{coord.latitude}</p>
+    {coord}
+{:catch error}
+    Error({error.code}): {error.message}
+{/await}
+
 {#await find_vendingmachine()}
     waiting...
 {:then result}
@@ -30,8 +39,10 @@
 </style>
 
 <script lang="ts">
-import { onMount } from "svelte";
+ import { onDestroy, onMount } from "svelte";
  import L from "leaflet";
+ import { LatLng, Map as LFMap } from "leaflet";
+ import { here } from "./geo";
 
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
@@ -50,7 +61,8 @@ const vending = new Map<string, string>([
     ["ice_cream", "アイスクリーム"],
 ]);
 
-let map;
+let map: LFMap;
+let coordWatchID: number;
 
 onMount(() => {
      map = L.map('map').setView([36.1070,140.1019], 13);
@@ -59,7 +71,28 @@ onMount(() => {
          attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
      }).addTo(map);
 
+     if ("geolocation" in navigator) {
+         navigator.geolocation.getCurrentPosition((position) => {
+             console.log(position);
+             here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+         });
+
+         coordWatchID = navigator.geolocation.watchPosition((position) => {
+             console.log(position);
+             here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+         });
+     }
+
+     here.subscribe(coord => {
+         if (coord === null) return;
+         console.log(coord);
+         map.flyTo($here);
+     })
  });
+
+ onDestroy(() => {
+    navigator.geolocation.clearWatch(coordWatchID);
+ })
 
 const find_vendingmachine = async () => {
     let resp = await fetch("https://lz4.overpass-api.de/api/interpreter", {
@@ -86,5 +119,6 @@ const find_vendingmachine = async () => {
         throw new Error(text);
     }
 }
+
 
 </script>
