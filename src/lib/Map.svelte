@@ -41,6 +41,7 @@
 <script lang="ts">
  import { onDestroy, onMount } from "svelte";
  import L from "leaflet";
+ import { LatLng, Map as LFMap } from "leaflet";
  import { here } from "./geo";
 
   const query: string = "[out:json][timeout:25]; \
@@ -60,8 +61,8 @@ const vending = new Map<string, string>([
     ["ice_cream", "アイスクリーム"],
 ]);
 
-let map;
- let unsubscribeCoords;
+let map: LFMap;
+let coordWatchID: number;
 
 onMount(() => {
      map = L.map('map').setView([36.1070,140.1019], 13);
@@ -70,14 +71,28 @@ onMount(() => {
          attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
      }).addTo(map);
 
-     unsubscribeCoords = here.subscribe(coord => {
+     if ("geolocation" in navigator) {
+         navigator.geolocation.getCurrentPosition((position) => {
+             console.log(position);
+             here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+         });
+
+         coordWatchID = navigator.geolocation.watchPosition((position) => {
+             console.log(position);
+             here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+         });
+     }
+
+     here.subscribe(coord => {
          if (coord === null) return;
          console.log(coord);
-         map.panTo(new L,LatLng(coord.latitude, coord.longitude));
+         map.flyTo($here);
      })
  });
 
- onDestroy(unsubscribeCoords);
+ onDestroy(() => {
+    navigator.geolocation.clearWatch(coordWatchID);
+ })
 
 const find_vendingmachine = async () => {
     let resp = await fetch("https://lz4.overpass-api.de/api/interpreter", {

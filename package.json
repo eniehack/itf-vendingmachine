@@ -20,6 +20,7 @@
     "vite": "^3.0.7"
   },
   "dependencies": {
+    "@types/leaflet": "^1.7.11",
     "leaflet": "^1.8.0"
   }
 }
