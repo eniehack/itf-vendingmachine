@@ -12,14 +12,6 @@
     <p>位置情報取得エラー(エラーコード: {error.code}): {error.message}</p>
 {/await}
 
-{#if $machine !== null}
-    <section>
-        <h1 id="{$machine.id}">自動販売機</h1>
-        <a href="geo:{$machine.lat},{$machine.lon}">geo URI</a>
-        <p>取り扱っているもの: {vending.get($machine.tags.vending)}</p>
-    </section>
-{/if}
-
 {#await find_vendingmachine()}
     waiting...
 {:then result}
@@ -31,8 +23,8 @@
 
 <style>
 #map {
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 100vw;
 }
 </style>
 
@@ -42,6 +34,7 @@
  import { LatLng, Map as LFMap } from "leaflet";
  import { here } from "./geo";
 import { writable } from "svelte/store";
+ import { VendingMachine } from "./vendingMachine";
 
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
@@ -73,19 +66,19 @@ onMount(() => {
 
      if ("geolocation" in navigator) {
          navigator.geolocation.getCurrentPosition((position) => {
-             console.log(position);
+             console.debug(position);
              here.set(new LatLng(position.coords.latitude, position.coords.longitude));
          });
 
          coordWatchID = navigator.geolocation.watchPosition((position) => {
-             console.log(position);
+             console.debug(position);
              here.set(new LatLng(position.coords.latitude, position.coords.longitude));
          });
      }
 
      here.subscribe(coord => {
          if (coord === null) return;
-         console.log(coord);
+         console.debug(coord);
          map.flyTo($here);
      });
  });
@@ -107,26 +100,19 @@ const find_vendingmachine = async () => {
     if (resp.ok) {
         json = await resp.json();
         json["elements"].forEach(elem => {
+            let m = new VendingMachine(elem);
+            let text = `<p>売っているもの: ${m.getVending()}</p><p>決済手段: ${m.getPaymentsType().join(", ")}</p>`;
             let marker = L.marker([elem["lat"], elem["lon"]])
                           .addTo(map)
-                          .bindPopup(`${elem["id"]}`);
-            marker.on("click", (e) => {
-                //detail_id.set(e.target._popup._content);
-                let m = json["elements"].filter(elem => elem["id"] == e.target._popup._content);
-                console.log(m[0]);
-                machine.set(m[0]);
-                console.log(e.target._popup._content);
-            });
+                          .bindPopup(text);
         });
 
-        console.log(json);
+        console.debug(json);
         return json;
     } else {
         let text = await resp.text();
         throw new Error(text);
     }
 }
-
- const machine = writable(null);
 
 </script>
