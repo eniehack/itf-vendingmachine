@@ -23,8 +23,8 @@
 
 <style>
 #map {
-  width: 100%;
-  height: 100vw;
+  height: 90vh;
+  width: 100vw;
 }
 </style>
 
