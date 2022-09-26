@@ -15,7 +15,6 @@
 {#await find_vendingmachine()}
     waiting...
 {:then result}
-<p>データは{result.osm3s.timestamp_areas_base}頃のものです</p>
 <p>{result.osm3s.copyright}</p>
 {:catch error}
 <p style="color: red">{error.message}</p>
@@ -23,8 +22,8 @@
 
 <style>
 #map {
-  width: 100%;
-  height: 100vw;
+  height: 90vh;
+  width: 100vw;
 }
 </style>
 
