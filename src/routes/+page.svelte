@@ -57,19 +57,19 @@ onMount(() => {
 
      if ("geolocation" in navigator) {
          navigator.geolocation.getCurrentPosition((position) => {
-             console.debug(position);
+             //console.debug(position);
              here.set(new LatLng(position.coords.latitude, position.coords.longitude));
          });
 
          coordWatchID = navigator.geolocation.watchPosition((position) => {
-             console.debug(position);
+             //console.debug(position);
              here.set(new LatLng(position.coords.latitude, position.coords.longitude));
          });
      }
 
      here.subscribe(coord => {
          if (coord === null) return;
-         console.debug(coord);
+         //console.debug(coord);
          map.flyTo($here);
      });
 
