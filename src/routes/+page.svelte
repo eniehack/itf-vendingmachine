@@ -4,6 +4,28 @@
    crossorigin=""/>
 </svelte:head>
 
+<MetaTags
+  title="筑波大学 自販機 Map"
+  openGraph={{
+    type: "website",
+    url: base,
+    title: "筑波大学 自販機 Map",
+    description: "筑波大学構内の自動販売機の場所を一覧できるサイト",
+    locale: "ja_JP",
+    images: [
+        {
+            url: ogpImage,
+        }
+    ]
+  }}
+  twitter={{
+    title: "筑波大学 自販機 Map",
+    description: "筑波大学構内の自動販売機の場所を一覧できるサイト",
+    handle: "@eniehack",
+    cardType: "summary"
+  }}
+/>
+
 <div id="map"></div>
 
 {#await $here}
@@ -26,6 +48,9 @@
  import { here } from "$lib/geo";
  import { writable } from "svelte/store";
  import { VendingMachine } from "$lib/vendingMachine";
+ import { MetaTags } from "svelte-meta-tags";
+ import { base, assets } from "$app/paths";
+  import ogpImage from "$lib/assets/ogp.jpg";
 
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
