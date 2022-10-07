@@ -24,3 +24,29 @@
         <p><a href="https://github.com/eniehack/itf-vendingmachine/issues">GitHubのissue</a>から、または、Twitterハッシュタグ <a href="https://twitter.com/hashtag/itf_vendingmachine_map">#itf_vendingmachinemap</a> 、<a href="https://twitter.com/hashtag/%E7%AD%91%E6%B3%A2%E5%A4%A7%E5%AD%A6%E8%87%AA%E8%B2%A9%E6%A9%9FMap">#筑波大学自販機Map</a> を付けて投稿してください。</p>
     </section>
 </article>
+
+<MetaTags
+  title="contribute"
+  titleTemplate="%s | 筑波大学 自販機 Map"
+  openGraph={{
+    type: "website",
+    url: base,
+    title: "contribute | 筑波大学 自販機 Map",
+    description: "筑波大学構内の自動販売機の場所を一覧できるサイト",
+    images: [
+        {
+            url: ogpImage,
+        }
+    ]
+  }}
+  twitter={{
+    title: "筑波大学 自販機 Map",
+    description: "筑波大学構内の自動販売機の場所を一覧できるサイト",
+  }}
+/>
+
+<script lang="ts">
+ import { base, assets } from "$app/paths";
+  import ogpImage from "$lib/assets/ogp.jpg";
+ import { MetaTags } from "svelte-meta-tags";
+</script>
