@@ -23,7 +23,11 @@ copyright (c) 2022 eniehack
 3. `pnpm run dev`
 
 
-## Contributing
+## 貢献する
+
+以下はこのサイト自体を改善する場合の方法を述べています。
+プログラムが書けなくても貢献する方法があります。
+詳しくは[こちら](https://itf-vendingmachine.vercel.app/contribute)。
 
 1. Fork it (https://github.com/eniehack/henly-web/fork)
 2. Create your feature branch (git checkout -b my-new-feature)
