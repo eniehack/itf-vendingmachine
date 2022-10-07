@@ -12,17 +12,9 @@
     <p>位置情報取得エラー(エラーコード: {error.code}): {error.message}</p>
 {/await}
 
-{#await find_vendingmachine()}
-    waiting...
-{:then result}
-<p>{result.osm3s.copyright}</p>
-{:catch error}
-<p style="color: red">{error.message}</p>
-{/await}
-
 <style>
 #map {
-  height: 90vh;
+  height: 85vh;
   width: 100vw;
 }
 </style>
@@ -31,9 +23,9 @@
  import { onDestroy, onMount } from "svelte";
  import L from "leaflet";
  import { LatLng, Map as LFMap } from "leaflet";
- import { here } from "./geo";
-import { writable } from "svelte/store";
- import { VendingMachine } from "./vendingMachine";
+ import { here } from "$lib/geo";
+ import { writable } from "svelte/store";
+ import { VendingMachine } from "$lib/vendingMachine";
 
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
@@ -80,6 +72,8 @@ onMount(() => {
          console.debug(coord);
          map.flyTo($here);
      });
+
+     find_vendingmachine();
  });
 
  onDestroy(() => {
@@ -87,6 +81,13 @@ onMount(() => {
  })
 
 const find_vendingmachine = async () => {
+  /*
+    let vm = localStorage.getItem("vm");
+    if (vm !== null) {
+        let json = JSON.parse(vm)
+        return json.data;
+    }
+    */
     let resp = await fetch("https://lz4.overpass-api.de/api/interpreter", {
         method: "POST",
         mode: "cors",
@@ -106,10 +107,17 @@ const find_vendingmachine = async () => {
                           .bindPopup(text);
         });
 
+      /*
         console.debug(json);
+        localStorage.setItem("vm", JSON.stringify({
+          data: json,
+          inserted_at: (new Date()).toISOString(),
+        }))
+        */
         return json;
     } else {
         let text = await resp.text();
+        window.alert("自動販売機データの取得に失敗しました");
         throw new Error(text);
     }
 }
