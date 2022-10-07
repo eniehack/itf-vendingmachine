@@ -10,7 +10,6 @@ export class VendingMachine {
        this.tags = new Map(Object.entries(elem["tags"]));
        this.lat = elem["lat"];
        this.lng = elem["lon"];
-       console.log(this.tags);
    }
 
     getPosition(): LatLng{

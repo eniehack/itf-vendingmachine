@@ -47,7 +47,7 @@
  import { LatLng, Map as LFMap } from "leaflet";
  import { here } from "$lib/geo";
  import { writable } from "svelte/store";
- import { VendingMachine } from "$lib/vendingMachine";
+ import { VendingMachine, vendingmachine } from "$lib/vendingMachine";
  import { MetaTags } from "svelte-meta-tags";
  import { base, assets } from "$app/paths";
   import ogpImage from "$lib/assets/ogp.jpg";
