@@ -72,6 +72,8 @@ onMount(() => {
          console.debug(coord);
          map.flyTo($here);
      });
+
+     find_vendingmachine();
  });
 
  onDestroy(() => {
