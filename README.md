@@ -1,38 +1,36 @@
-# create-svelte
+# Henly Web Viewer
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+筑波大学構内の自動販売機の場所を一覧できるサイト
 
-## Creating a project
+## プライバシーに関して
 
-If you're seeing this, you've probably already done this step. Congrats!
+このサービスではあなたの位置情報を取り扱います。
+しかし、位置情報はあなたのブラウザのみに共有され、その他第三者に共有されることはありません。
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## ライセンス
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+copyright (c) 2022 eniehack
 
-## Developing
+このソフトウェアは [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) または [GNU Affero General Public License v3.0 only](https://www.gnu.org/licenses/agpl-3.0.en.html) でライセンスされます。
+あなたはこれら 2 つからライセンスを選ぶことができます。
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Install
 
-```bash
-npm run dev
+主に開発者向けです
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+1. clone & cd
+2. `pnpm i`
+3. `pnpm run dev`
 
-## Building
 
-To create a production version of your app:
+## Contributing
 
-```bash
-npm run build
-```
+1. Fork it (https://github.com/eniehack/henly-web/fork)
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Commit your changes (git commit -am 'Add some feature')
+4. Push to the branch (git push origin my-new-feature)
+5. Create a new Pull Request
 
-You can preview the production build with `npm run preview`.
+## Contributers
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- [eniehack](https://github.com/eniehack) - creator and maintainer
