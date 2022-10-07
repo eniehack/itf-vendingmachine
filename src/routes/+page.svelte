@@ -52,17 +52,6 @@
  import { base, assets } from "$app/paths";
   import ogpImage from "$lib/assets/ogp.jpg";
 
-  const query: string = "[out:json][timeout:25]; \
-way(id:183555030); \
-map_to_area-> .ulis; \
-way(id:183555029); \
-map_to_area -> .ut; \
-( \
-  node(area.ulis)[amenity=vending_machine]; \
-  node(area.ut)[amenity=vending_machine]; \
-); \
-out;";
-
 const vending = new Map<string, string>([
     ["drinks", "飲料"],
     ["food", "食品"],
@@ -71,7 +60,6 @@ const vending = new Map<string, string>([
 
 let map: LFMap;
 let coordWatchID: number;
- let json;
 
 onMount(() => {
      map = L.map('map').setView([36.1070,140.1019], 13);
@@ -98,53 +86,30 @@ onMount(() => {
          map.flyTo($here);
      });
 
-     find_vendingmachine();
+     vendingmachine.subscribe(vms => {
+         if (vms === undefined || map === undefined) return;
+         vms.forEach(vm => {
+             let text = `<p>売っているもの: ${vm.getVending()}</p><p>決済手段: ${vm.getPaymentsType().join(", ")}</p>`;
+             let marker = L.marker(vm.getPosition())
+                           .addTo(map)
+                           .bindPopup(text);
+         });
+         return;
+     });
+
+     vendingmachine.subscribe(vms => {
+         if (vms === undefined) return;
+
+         let vm_arr: VendingMachine[] = [];
+         vms.forEach(vm => {
+           vm_arr.push(vm.toObject());
+         });
+        localStorage.setItem("vm", JSON.stringify({elements: vm_arr, created_at: (new Date).toISOString()}));
+     });
  });
 
  onDestroy(() => {
     navigator.geolocation.clearWatch(coordWatchID);
- })
-
-const find_vendingmachine = async () => {
-  /*
-    let vm = localStorage.getItem("vm");
-    if (vm !== null) {
-        let json = JSON.parse(vm)
-        return json.data;
-    }
-    */
-    let resp = await fetch("https://lz4.overpass-api.de/api/interpreter", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencode",
-        },
-        body: query,
-    });
-
-    if (resp.ok) {
-        json = await resp.json();
-        json["elements"].forEach(elem => {
-            let m = new VendingMachine(elem);
-            let text = `<p>売っているもの: ${m.getVending()}</p><p>決済手段: ${m.getPaymentsType().join(", ")}</p>`;
-            let marker = L.marker([elem["lat"], elem["lon"]])
-                          .addTo(map)
-                          .bindPopup(text);
-        });
-
-      /*
-        console.debug(json);
-        localStorage.setItem("vm", JSON.stringify({
-          data: json,
-          inserted_at: (new Date()).toISOString(),
-        }))
-        */
-        return json;
-    } else {
-        let text = await resp.text();
-        window.alert("自動販売機データの取得に失敗しました");
-        throw new Error(text);
-    }
-}
+ });
 
 </script>
