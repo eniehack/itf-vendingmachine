@@ -5,7 +5,8 @@
     <section>
         <h1>自動販売機の報告</h1>
         <p>
-            OpenStreetMapにユーザ登録をして、自動販売機のデータを追加することもできます。このサイトでは、自動販売機のデータ、地図データをOpenStreetMapから取得しています。
+            このサイトでは、自動販売機のデータ、地図データを<a href="https://openstreetmap.org/">OpenStreetMap</a>から取得しています。
+            OpenStreetMapにユーザ登録をして、自動販売機のデータを追加することもできます。
         </p>
         
         <!--<p>
