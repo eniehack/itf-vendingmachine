@@ -12,11 +12,6 @@
     <p>位置情報取得エラー(エラーコード: {error.code}): {error.message}</p>
 {/await}
 
-{#await find_vendingmachine()}
-    waiting...
-{:then result}
-{/await}
-
 <style>
 #map {
   height: 85vh;
