@@ -52,12 +52,6 @@
  import { base, assets } from "$app/paths";
   import ogpImage from "$lib/assets/ogp.jpg";
 
-const vending = new Map<string, string>([
-    ["drinks", "飲料"],
-    ["food", "食品"],
-    ["ice_cream", "アイスクリーム"],
-]);
-
 let map: LFMap;
 let coordWatchID: number;
 
@@ -89,7 +83,8 @@ onMount(() => {
      vendingmachine.subscribe(vms => {
          if (vms === undefined || map === undefined) return;
          vms.forEach(vm => {
-             let text = `<p>売っているもの: ${vm.getVending()}</p><p>決済手段: ${vm.getPaymentsType().join(", ")}</p>`;
+           console.log(vm.getHumanizedPaymentsType());
+             let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType().join(", ")}</p>`;
              let marker = L.marker(vm.getPosition())
                            .addTo(map)
                            .bindPopup(text);
