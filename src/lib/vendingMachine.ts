@@ -26,8 +26,53 @@ export class VendingMachine {
         return payments;
     }
 
-    getVending(): string {
+    getHumanizedPaymentsType(): string[] {
+        let payments = this.getPaymentsType();
+        const payment_map = new Map<string, string>([
+            ["icsf", "交通系ICカード"],
+            ["d_barai", "d払い"],
+            ["au_pay", " au PAY"],
+            ["rakuten_pay", "楽天ペイ"],
+            ["coke_on_pay", "Coke ON Pay"],
+            ["jcoin_pay", " J-Coin Pay"],
+            ["cash", "現金"],
+            ["coins", "硬貨"],
+            ["notes", "紙幣"],
+        ]);
+
+        if (payments.length === 0) {
+            return ["不明"];
+        }
+
+        return payments.map((payment) => {
+            if (payment_map.has(payment) ) {
+                return payment_map.get(payment);
+            } else {
+                return payment;
+            }
+        });
+    }
+
+    getVending(): string | undefined {
         return this.tags.get("vending");
+    }
+
+    getHumanizedVendingType() : string {
+        let vending = this.getVending();
+        const vending_map = new Map<string, string>([
+            ["drinks", "飲料"],
+            ["food", "食品"],
+            ["ice_cream", "アイスクリーム"],
+            ["bread", "パン"],
+        ]);
+
+        if (vending === undefined) {
+            return "不明";
+        } else if (vending_map.has(vending) ) {
+            return vending_map.get(vending);
+        } else {
+            return vending;
+        }
     }
 
     toObject(): Object {
@@ -41,6 +86,7 @@ export class VendingMachine {
         return out;
     }
 }
+
 
 export const vendingmachine: Readable<VendingMachine[]> = readable(undefined, async (set) => {
   const query: string = "[out:json][timeout:25]; \
