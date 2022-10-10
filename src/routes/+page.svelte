@@ -57,7 +57,6 @@ let map: LFMap;
 let coordWatchID: number;
   let mapIcon = L.icon({iconUrl: markerIcon, shadowUrl: markerShadow});
 
-<<<<<<< HEAD
   onMount(() => {
     map = L.map('map').setView([36.1070,140.1019], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
