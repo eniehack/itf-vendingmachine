@@ -40,17 +40,18 @@
 </style>
 
 <script lang="ts">
- import { onDestroy, onMount } from "svelte";
- import L from "leaflet";
- import { LatLng, Map as LFMap } from "leaflet";
- import { here } from "$lib/geo";
- import { writable } from "svelte/store";
- import { VendingMachine, vendingmachine } from "$lib/vendingMachine";
- import { MetaTags } from "svelte-meta-tags";
- import { base, assets } from "$app/paths";
+  import { onDestroy, onMount } from "svelte";
+  import "leaflet/dist/leaflet.css";
+  import L from "leaflet";
+  import markerIcon from "$lib/assets/marker-icon.png";
+  import markerShadow from "$lib/assets/marker-shadow.png";
+  import { LatLng, Map as LFMap } from "leaflet";
+  import { here } from "$lib/geo";
+  import { writable } from "svelte/store";
+  import { VendingMachine, vendingmachine } from "$lib/vendingMachine";
+  import { MetaTags } from "svelte-meta-tags";
+  import { base, assets } from "$app/paths";
   import ogpImage from "$lib/assets/ogp.jpg";
-  import { browser } from "$app/environment";
-  import LeafletCSS from "../../node_modules/leaflet/dist/leaflet.css";
 
 const vending = new Map<string, string>([
     ["drinks", "飲料"],
@@ -60,6 +61,7 @@ const vending = new Map<string, string>([
 
 let map: LFMap;
 let coordWatchID: number;
+  let mapIcon = L.icon({iconUrl: markerIcon, shadowUrl: markerShadow});
 
   onMount(() => {
     map = L.map('map').setView([36.1070,140.1019], 13);
@@ -90,7 +92,7 @@ let coordWatchID: number;
       if (vms === undefined || map === undefined) return;
       vms.forEach(vm => {
         let text = `<p>売っているもの: ${vm.getVending()}</p><p>決済手段: ${vm.getPaymentsType().join(", ")}</p>`;
-        let marker = L.marker(vm.getPosition())
+        let marker = L.marker(vm.getPosition(), {icon: mapIcon})
                       .addTo(map)
                       .bindPopup(text);
       });
