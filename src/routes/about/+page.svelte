@@ -1,6 +1,15 @@
 <article>
     <h1>about</h1>
-    <p></p>
+    <section>
+      <h1>
+        地図、自販機データの出典
+      </h1>
+      <p>
+        地図データ、自動販売機データ共に<a href="https://openstreetmap.org">OpenStreetMap</a>を利用しています。
+        OSMの提供するデータはODbLの下にライセンスされます。
+        詳細は<a href="https://www.openstreetmap.org/copyright">こちら</a>をご覧ください
+      </p>
+    </section>
 </article>
 
 <MetaTags

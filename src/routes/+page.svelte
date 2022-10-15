@@ -1,7 +1,3 @@
-<svelte:head>
- <title>筑波大学 自販機 Map</title>
-</svelte:head>
-
 <MetaTags
   title="筑波大学 自販機 Map"
   openGraph={{
@@ -34,7 +30,7 @@
 
 <style>
 #map {
-  height: 85vh;
+  height: 100vh;
   width: 100vw;
 }
 </style>
@@ -42,70 +38,64 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
   import "leaflet/dist/leaflet.css";
+  import "materialize-css/dist/css/materialize.min.css";
   import L from "leaflet";
-  import markerIcon from "$lib/assets/marker-icon.png";
-  import markerShadow from "$lib/assets/marker-shadow.png";
   import { LatLng, Map as LFMap } from "leaflet";
   import { here } from "$lib/geo";
   import { writable } from "svelte/store";
-  import { VendingMachine, vendingmachine } from "$lib/vendingMachine";
+  import { VendingMachine } from "$lib/vendingMachine";
   import { MetaTags } from "svelte-meta-tags";
   import { base, assets } from "$app/paths";
   import ogpImage from "$lib/assets/ogp.jpg";
+  import { browser } from "$app/environment";
 
-let map: LFMap;
-let coordWatchID: number;
-  let mapIcon = L.icon({iconUrl: markerIcon, shadowUrl: markerShadow});
+ /** @type {import('./$types').PageData} */
+ export let data;
+
+ let map: LFMap;
+ let coordWatchID: number;
 
   onMount(() => {
-    map = L.map('map').setView([36.1070,140.1019], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        //console.debug(position);
-        here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-      });
+    if (browser) {
+      //console.log(data);
+      map = L.map('map').setView([36.1070,140.1019], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
+      }).addTo(map);
       
-      coordWatchID = navigator.geolocation.watchPosition((position) => {
-        //console.debug(position);
-        here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          //console.debug(position);
+          here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+        });
+        
+        coordWatchID = navigator.geolocation.watchPosition((position) => {
+          //console.debug(position);
+          here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+        });
+      }
+      
+      here.subscribe(coord => {
+        if (coord === null) return;
+        //console.debug(coord);
+        map.flyTo($here);
       });
-    }
-    
-    here.subscribe(coord => {
-      if (coord === null) return;
-      //console.debug(coord);
-      map.flyTo($here);
-    });
-    
-    vendingmachine.subscribe(vms => {
-      if (vms === undefined || map === undefined) return;
-      vms.forEach(vm => {
-        let text = `<p>売っているもの: ${vm.getVending()}</p><p>決済手段: ${vm.getPaymentsType().join(", ")}</p>`;
-        let marker = L.marker(vm.getPosition(), {icon: mapIcon})
+
+      data.elements.forEach(obj => {
+        let vm = new VendingMachine(obj);
+        let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
+        let marker = L.marker(vm.getPosition())
                       .addTo(map)
                       .bindPopup(text);
       });
-      return;
-    });
-    
-    vendingmachine.subscribe(vms => {
-      if (vms === undefined) return;
-      
-      let vm_arr: VendingMachine[] = [];
-      vms.forEach(vm => {
-        vm_arr.push(vm.toObject());
-      });
-      localStorage.setItem("vm", JSON.stringify({elements: vm_arr, created_at: (new Date).toISOString()}));
-    });
+    }
   });
   
   onDestroy(() => {
-    navigator.geolocation.clearWatch(coordWatchID);
+    if (browser) {
+      navigator.geolocation.clearWatch(coordWatchID);
+    }
   });
 
 </script>

@@ -87,7 +87,8 @@ export class VendingMachine {
     }
 }
 
-
+/*
+ *
 export const vendingmachine: Readable<VendingMachine[]> = readable(undefined, async (set) => {
   const query: string = "[out:json][timeout:25]; \
 way(id:183555030); \
@@ -138,3 +139,4 @@ out;";
         }
     return () => {};
 });
+ */
