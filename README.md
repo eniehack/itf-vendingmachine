@@ -15,6 +15,7 @@ copyright (c) 2022 eniehack
 あなたはこれら 2 つからライセンスを選ぶことができます。
 
 また、`src/lib/assets/marker-shadow.png`と`src/lib/assets/marker-icon.png`は、[leaflet](https://github.com/Leaflet/Leaflet/blob/main/LICENSE) (BSD 2 条項ライセンス) から取得したファイルです。
+
 ```
 BSD 2-Clause License
 
@@ -51,7 +52,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 1. clone & cd
 2. `pnpm i`
 3. `pnpm run dev`
-
 
 ## 貢献する
 

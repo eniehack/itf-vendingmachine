@@ -1,90 +1,90 @@
-import { LatLng } from "leaflet";
-import { readable, type Readable } from "svelte/store";
+import { LatLng } from 'leaflet';
+import { readable, type Readable } from 'svelte/store';
 
 export class VendingMachine {
-    private tags: Map<string, string>;
-    public lat: number;
-    public lng: number;
+	private tags: Map<string, string>;
+	public lat: number;
+	public lng: number;
 
-   constructor(elem: Object) {
-       this.tags = new Map(Object.entries(elem["tags"]));
-       this.lat = elem["lat"];
-       this.lng = elem["lon"];
-   }
+	constructor(elem: Object) {
+		this.tags = new Map(Object.entries(elem['tags']));
+		this.lat = elem['lat'];
+		this.lng = elem['lon'];
+	}
 
-    getPosition(): LatLng{
-        return new LatLng(this.lat, this.lng);
-    }
+	getPosition(): LatLng {
+		return new LatLng(this.lat, this.lng);
+	}
 
-    getPaymentsType(): string[] {
-        let payments = [];
-        this.tags.forEach((v, k) => {
-            if (k.startsWith("payment:") && v === "yes") {
-                payments.push(k.substring(8));
-            }
-        });
-        return payments;
-    }
+	getPaymentsType(): string[] {
+		let payments = [];
+		this.tags.forEach((v, k) => {
+			if (k.startsWith('payment:') && v === 'yes') {
+				payments.push(k.substring(8));
+			}
+		});
+		return payments;
+	}
 
-    getHumanizedPaymentsType(): string[] {
-        let payments = this.getPaymentsType();
-        const payment_map = new Map<string, string>([
-            ["icsf", "交通系ICカード"],
-            ["d_barai", "d払い"],
-            ["au_pay", " au PAY"],
-            ["rakuten_pay", "楽天ペイ"],
-            ["coke_on_pay", "Coke ON Pay"],
-            ["jcoin_pay", " J-Coin Pay"],
-            ["cash", "現金"],
-            ["coins", "硬貨"],
-            ["notes", "紙幣"],
-        ]);
+	getHumanizedPaymentsType(): string[] {
+		let payments = this.getPaymentsType();
+		const payment_map = new Map<string, string>([
+			['icsf', '交通系ICカード'],
+			['d_barai', 'd払い'],
+			['au_pay', ' au PAY'],
+			['rakuten_pay', '楽天ペイ'],
+			['coke_on_pay', 'Coke ON Pay'],
+			['jcoin_pay', ' J-Coin Pay'],
+			['cash', '現金'],
+			['coins', '硬貨'],
+			['notes', '紙幣']
+		]);
 
-        if (payments.length === 0) {
-            return ["不明"];
-        }
+		if (payments.length === 0) {
+			return ['不明'];
+		}
 
-        return payments.map((payment) => {
-            if (payment_map.has(payment) ) {
-                return payment_map.get(payment);
-            } else {
-                return payment;
-            }
-        });
-    }
+		return payments.map((payment) => {
+			if (payment_map.has(payment)) {
+				return payment_map.get(payment);
+			} else {
+				return payment;
+			}
+		});
+	}
 
-    getVending(): string | undefined {
-        return this.tags.get("vending");
-    }
+	getVending(): string | undefined {
+		return this.tags.get('vending');
+	}
 
-    getHumanizedVendingType() : string {
-        let vending = this.getVending();
-        const vending_map = new Map<string, string>([
-            ["drinks", "飲料"],
-            ["food", "食品"],
-            ["ice_cream", "アイスクリーム"],
-            ["bread", "パン"],
-        ]);
+	getHumanizedVendingType(): string {
+		let vending = this.getVending();
+		const vending_map = new Map<string, string>([
+			['drinks', '飲料'],
+			['food', '食品'],
+			['ice_cream', 'アイスクリーム'],
+			['bread', 'パン']
+		]);
 
-        if (vending === undefined) {
-            return "不明";
-        } else if (vending_map.has(vending) ) {
-            return vending_map.get(vending);
-        } else {
-            return vending;
-        }
-    }
+		if (vending === undefined) {
+			return '不明';
+		} else if (vending_map.has(vending)) {
+			return vending_map.get(vending);
+		} else {
+			return vending;
+		}
+	}
 
-    toObject(): Object {
-        let out = {};
-        let tags = {};
-        for (let [k, v] of this.tags) tags[k] = v;
-        out["lat"] = this.lat;
-        out["lon"] = this.lng;
-        out["tags"] = tags;
+	toObject(): Object {
+		let out = {};
+		let tags = {};
+		for (let [k, v] of this.tags) tags[k] = v;
+		out['lat'] = this.lat;
+		out['lon'] = this.lng;
+		out['tags'] = tags;
 
-        return out;
-    }
+		return out;
+	}
 }
 
 /*
