@@ -7,6 +7,7 @@
 	import { here } from '$lib/geo';
 	import { writable } from 'svelte/store';
 	import { VendingMachine } from '$lib/vendingMachine';
+ 	import BottleImage from '$lib/assets/bottle.png';
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base, assets } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
@@ -17,6 +18,11 @@
 
 	let map: LFMap;
 	let coordWatchID: number;
+
+ 	let bottleIcon = L.icon({
+		iconUrl: BottleImage,
+		iconSize: [36, 36],
+	});
 
 	onMount(() => {
 		if (browser) {
@@ -48,7 +54,7 @@
 			data.elements.forEach((obj) => {
 				let vm = new VendingMachine(obj);
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
-				let marker = L.marker(vm.getPosition()).addTo(map).bindPopup(text);
+				let marker = L.marker(vm.getPosition(), {icon: bottleIcon}).addTo(map).bindPopup(text);
 			});
 		}
 	});
