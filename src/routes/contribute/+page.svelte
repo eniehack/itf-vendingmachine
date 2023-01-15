@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { base, assets } from '$app/paths';
+	import { base } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.webp';
 	import { MetaTags } from 'svelte-meta-tags';
 </script>
