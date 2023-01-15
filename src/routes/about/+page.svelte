@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base } from '$app/paths';
-	import ogpImage from '$lib/assets/ogp.webp';
+	import ogpImage from '$lib/assets/ogp.jpg';
 </script>
 
 <article>

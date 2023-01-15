@@ -5,21 +5,21 @@
 	import { LatLng, type Map as LFMap } from 'leaflet';
 	import { here } from '$lib/geo';
 	import { VendingMachine } from '$lib/vendingMachine';
- 	import BottleImage from '$lib/assets/bottle.webp';
+	import BottleImage from '$lib/assets/bottle.webp';
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base } from '$app/paths';
-	import ogpImage from '$lib/assets/ogp.webp';
+	import ogpImage from '$lib/assets/ogp.jpg';
 	import { browser } from '$app/environment';
- 	import type { PageData } from "./$types";
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 
 	let map: LFMap;
 	let coordWatchID: number;
 
- 	let bottleIcon = L.icon({
+	let bottleIcon = L.icon({
 		iconUrl: BottleImage,
-		iconSize: [36, 36],
+		iconSize: [36, 36]
 	});
 
 	onMount(() => {
@@ -52,7 +52,7 @@
 			data.elements.forEach((obj) => {
 				let vm = new VendingMachine(obj);
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
-				let marker = L.marker(vm.getPosition(), {icon: bottleIcon}).addTo(map).bindPopup(text);
+				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
 			});
 		}
 	});
@@ -97,40 +97,40 @@
 {/await}
 
 <style lang="scss">
- #map {
- 	position: absolute;
- 	top: 0;
- 	left: 0;
- 	height: 100% !important;
- 	width: 100% !important;
- }
-
- @import "bulma/sass/utilities/mixins.sass";
-
- @include mobile {
- 	.map-container {
-		position: relative;
-		padding-bottom: 205%;
-		height: 0;
-		overflow: hidden;
+	#map {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100% !important;
+		width: 100% !important;
 	}
- }
 
- @include tablet-only {
- 	.map-container {
-		position: relative;
-		padding-bottom: 125%;
-		height: 0;
-		overflow: hidden;
-	}
- }
+	@import 'bulma/sass/utilities/mixins.sass';
 
- @include desktop {
- 	.map-container {
-		position: relative;
-		padding-bottom: 49%;
-		height: 0;
-		overflow: hidden;
+	@include mobile {
+		.map-container {
+			position: relative;
+			padding-bottom: 205%;
+			height: 0;
+			overflow: hidden;
+		}
 	}
- }
+
+	@include tablet-only {
+		.map-container {
+			position: relative;
+			padding-bottom: 125%;
+			height: 0;
+			overflow: hidden;
+		}
+	}
+
+	@include desktop {
+		.map-container {
+			position: relative;
+			padding-bottom: 49%;
+			height: 0;
+			overflow: hidden;
+		}
+	}
 </style>
