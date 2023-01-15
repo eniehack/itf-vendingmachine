@@ -3,7 +3,8 @@
 </script>
 
 <style lang="scss">
-@import "bulma/sass/utilities/_all.sass";
+@import "bulma/sass/utilities/controls.sass";
+@import "bulma/sass/utilities/extends.sass";
 @import "bulma/sass/components/navbar.sass";
 </style>
 
