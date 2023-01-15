@@ -7,7 +7,7 @@
 <article>
 	<h1>このサイトへ貢献する</h1>
 	<section>
-		<h1 class="section__title">自動販売機の報告</h1>
+		<h2>自動販売機の報告</h2>
 		<p>
 			このサイトでは、自動販売機のデータ、地図データを<a href="https://openstreetmap.org/"
 				>OpenStreetMap</a
@@ -20,14 +20,14 @@
         </p>-->
 	</section>
 	<section>
-		<h1 class="section__title">開発に参加する</h1>
+		<h2>開発に参加する</h2>
 		<p>
 			このサイトは<a href="https://github.com/eniehack/itf-vendingmachine">GitHub</a
 			>にて、オープンソースソフトウェアとして公開されています。 Pull Request歓迎です。
 		</p>
 	</section>
 	<section>
-		<h1 class="section__title">バグ等の報告、機能の提案</h1>
+		<h2>バグ等の報告、機能の提案</h2>
 		<p>
 			<a href="https://github.com/eniehack/itf-vendingmachine/issues">GitHubのissue</a
 			>から、または、Twitterハッシュタグ
@@ -62,9 +62,3 @@
 		cardType: 'summary'
 	}}
 />
-
-<style>
-	.section__title {
-		font-size: 3.2rem;
-	}
-</style>
