@@ -6,10 +6,10 @@
 	import { here } from '$lib/geo';
 	import { writable } from 'svelte/store';
 	import { VendingMachine } from '$lib/vendingMachine';
- 	import BottleImage from '$lib/assets/bottle.png';
+ 	import BottleImage from '$lib/assets/bottle.webp';
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base, assets } from '$app/paths';
-	import ogpImage from '$lib/assets/ogp.jpg';
+	import ogpImage from '$lib/assets/ogp.webp';
 	import { browser } from '$app/environment';
  	import type { PageData } from "./$types";
 
