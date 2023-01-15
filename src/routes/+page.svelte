@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import 'leaflet/dist/leaflet.css';
-	import 'materialize-css/dist/css/materialize.min.css';
 	import L from 'leaflet';
 	import { LatLng, type Map as LFMap } from 'leaflet';
 	import { here } from '$lib/geo';
@@ -88,7 +87,9 @@
 	}}
 />
 
-<div id="map" />
+<div class="map-container">
+	<div id="map" />
+</div>
 
 {#await $here}
 	<p>位置情報取得中</p>
@@ -96,10 +97,41 @@
 	<p>位置情報取得エラー(エラーコード: {error.code}): {error.message}</p>
 {/await}
 
-<style>
-	@import '../../node_modules/leaflet/dist/leaflet.css';
-	#map {
-		height: 100vh;
-		width: 100vw;
+<style lang="scss">
+ #map {
+ 	position: absolute;
+ 	top: 0;
+ 	left: 0;
+ 	height: 100% !important;
+ 	width: 100% !important;
+ }
+
+ @import "bulma/sass/utilities/mixins.sass";
+
+ @include mobile {
+ 	.map-container {
+		position: relative;
+		padding-bottom: 205%;
+		height: 0;
+		overflow: hidden;
 	}
+ }
+
+ @include tablet-only {
+ 	.map-container {
+		position: relative;
+		padding-bottom: 125%;
+		height: 0;
+		overflow: hidden;
+	}
+ }
+
+ @include desktop {
+ 	.map-container {
+		position: relative;
+		padding-bottom: 49%;
+		height: 0;
+		overflow: hidden;
+	}
+ }
 </style>

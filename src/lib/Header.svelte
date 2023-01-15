@@ -1,33 +1,38 @@
 <script lang="ts">
-	import 'materialize-css/dist/css/materialize.min.css';
-	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
-
-	onMount(async () => {
-		if (browser) {
-			const M = await import('materialize-css/dist/js/materialize.min.js');
-			var elems = document.querySelectorAll('.sidenav');
-			var instances = M.Sidenav.init(elems);
-		}
-	});
+ 	var is_navbar_toggled = false;
 </script>
 
+<style lang="scss">
+@import "bulma/sass/utilities/_all.sass";
+@import "bulma/sass/components/navbar.sass";
+</style>
+
 <header>
-	<nav>
-		<div class="nav-wrapper">
-			<a href="/" class="brand-logo center">筑波大学 自販機 Map</a>
-			<a href="#" data-target="mobile-demo" class="sidenav-trigger">
-				<i class="material-icons">menu</i>
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="navbar-item" href="/">
+				筑波大自販機Map
 			</a>
-			<ul class="right hide-on-med-and-down" id="nav-mobile">
-				<li><a href="/about">about</a></li>
-				<li><a href="/contribute">このサイトに貢献する</a></li>
-			</ul>
+			<span role="button"
+				  class="navbar-burger"
+				  aria-label="menu"
+				  aria-expanded="false"
+				  data-target="navbar-content"
+				  class:is-active={is_navbar_toggled}
+				  on:click="{() => is_navbar_toggled = !is_navbar_toggled}">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</span>
+		</div>
+		<div id="navbar-content" class="navbar-menu" class:is-active={is_navbar_toggled}>
+			<div class="navbar-start">
+				<a href="/about" class="navbar-item">about</a>
+				<a href="/contribute" class="navbar-item">このサイトに貢献する</a>
+			</div>
+			<div class="navbar-end">
+				<a class="navbar-item" href="https://github.com/eniehack/itf-vendingmachine">GitHub</a>
+			</div>
 		</div>
 	</nav>
-
-	<ul class="sidenav" id="mobile-demo">
-		<li><a href="/about">about</a></li>
-		<li><a href="/contribute">このサイトに貢献する</a></li>
-	</ul>
 </header>
