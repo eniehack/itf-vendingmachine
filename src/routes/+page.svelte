@@ -11,9 +11,9 @@
 	import { base, assets } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
 	import { browser } from '$app/environment';
+ 	import type { PageData } from "./$types";
 
-	/** @type {import('./$types').PageData} */
-	export let data;
+	export let data: PageData;
 
 	let map: LFMap;
 	let coordWatchID: number;

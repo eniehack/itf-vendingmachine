@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
+import type { PageServerLoad } from "./$types";
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ data, fetch }) {
+export const load = (async ({ data, fetch }) => {
 	const query: string =
 		'[out:json][timeout:25]; \
 way(id:183555030); \
@@ -19,7 +19,6 @@ out;';
 		mode: 'cors',
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencode',
-			'Cache-Control': 'max-age=604800'
 		},
 		body: query
 	});
@@ -31,4 +30,4 @@ out;';
 		let text = await resp.text();
 		throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
 	}
-}
+}) satisfies PageServerLoad;
