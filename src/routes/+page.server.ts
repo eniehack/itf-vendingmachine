@@ -2,9 +2,11 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
 
 /** @type {import('@sveltejs/adapter-vercel').Config} */
+/*
 export const config = {
 	runtime: 'edge'
 }
+*/
 
 export const load = (async ({ data, fetch }) => {
 	const query: string =
