@@ -14,7 +14,7 @@ map_to_area -> .ut; \
 ); \
 out;';
 
-	let resp = await fetch('https://lz4.overpass-api.de/api/interpreter', {
+	let resp = await fetch('https://overpass-api.de/api/interpreter', {
 		method: 'POST',
 		mode: 'cors',
 		headers: {
