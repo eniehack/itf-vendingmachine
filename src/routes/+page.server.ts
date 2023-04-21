@@ -28,7 +28,7 @@ out;';
 		let json = await resp.json();
 		return {
 			status: 200,
-			body: json,
+			body: json["elements"],
 			headers: {
 				'Cache-Control': 'max-age=43200, public' 
 			}
