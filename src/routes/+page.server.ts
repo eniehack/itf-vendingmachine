@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ fetch }) => {
+export const load = (async ({ fetch, setHeaders }) => {
 	const query: string =
 		'[out:json][timeout:25]; \
 way(id:183555030); \
@@ -26,13 +26,10 @@ out;';
 
 	if (resp.ok) {
 		let json = await resp.json();
-		return {
-			status: 200,
-			body: json["elements"],
-			headers: {
-				'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
-			}
-		}
+		setHeaders({
+			'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
+		})
+		return json["elements"];
 	} else {
 		let text = await resp.text();
 		throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
