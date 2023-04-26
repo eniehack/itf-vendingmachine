@@ -28,7 +28,7 @@ out;';
 		let json = await resp.json();
 		setHeaders({
 			'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
-		})
+		});
 		return json["elements"];
 	} else {
 		let text = await resp.text();

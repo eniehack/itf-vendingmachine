@@ -49,7 +49,9 @@
 				map.flyTo($here);
 			});
 
-			data.forEach((obj) => {
+			console.log(data);
+
+			data.body.forEach((obj) => {
 				let vm = new VendingMachine(obj);
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
 				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
