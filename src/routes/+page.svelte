@@ -49,19 +49,22 @@
 				map.flyTo($here);
 			});
 
-			let vendingmachines;
+			let vendingmachines: Array<VendingMachine> = [];
 			if (!dev) {
-				vendingmachines = data;
+				for (const [_, v] of Object.entries(data)) {
+					vendingmachines.push(new VendingMachine(v));
+				}
 			} else {
-				vendingmachines = data.body;
+				data.body.forEach(elem => {
+					vendingmachines.push(new VendingMachine(elem));
+				});
 			}
-			console.log(data);
+			console.log(vendingmachines);
 
-			for (const [k, v] of Object.entries(vendingmachines)) {
-				let vm = new VendingMachine(v);
+			vendingmachines.forEach(vm => {
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
 				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
-			}
+			});
 		}
 	});
 
