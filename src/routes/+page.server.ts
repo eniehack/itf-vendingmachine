@@ -30,7 +30,7 @@ out;';
 			status: 200,
 			body: json["elements"],
 			headers: {
-				'Cache-Control': 'max-age=43200, public' 
+				'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
 			}
 		}
 	} else {
