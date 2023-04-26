@@ -12,9 +12,8 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^1.0.0",
-		"@sveltejs/adapter-vercel": "^1.0.0",
-		"@sveltejs/kit": "^1.0.12",
+		"@sveltejs/adapter-vercel": "^2.0.0",
+		"@sveltejs/kit": "^1.5.0",
 		"bulma": "^0.9.4",
 		"leaflet": "^1.9.2",
 		"prettier": "^2.6.2",
