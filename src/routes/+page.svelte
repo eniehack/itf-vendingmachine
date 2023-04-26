@@ -55,6 +55,7 @@
 			} else {
 				vendingmachines = data.body;
 			}
+			console.log(vendingmachines)
 
 			vendingmachines.forEach((obj) => {
 				let vm = new VendingMachine(obj);
