@@ -55,13 +55,13 @@
 			} else {
 				vendingmachines = data.body;
 			}
-			console.log(vendingmachines)
+			console.log(data);
 
-			vendingmachines.forEach((obj) => {
-				let vm = new VendingMachine(obj);
+			for (const [k, v] of Object.entries(vendingmachines)) {
+				let vm = new VendingMachine(v);
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
 				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
-			});
+			}
 		}
 	});
 
