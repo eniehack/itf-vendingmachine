@@ -9,7 +9,7 @@
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
-	import { browser } from '$app/environment';
+	import { browser, dev } from '$app/environment';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -49,9 +49,14 @@
 				map.flyTo($here);
 			});
 
-			console.log(data);
+			let vendingmachines;
+			if (!dev) {
+				vendingmachines = data;
+			} else {
+				vendingmachines = data.body;
+			}
 
-			data.body.forEach((obj) => {
+			vendingmachines.forEach((obj) => {
 				let vm = new VendingMachine(obj);
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
 				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
