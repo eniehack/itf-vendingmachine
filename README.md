@@ -14,7 +14,7 @@ copyright (c) 2022 eniehack
 このソフトウェアは [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) または [GNU Affero General Public License v3.0 only](https://www.gnu.org/licenses/agpl-3.0.en.html) でライセンスされます。
 あなたはこれら 2 つからライセンスを選ぶことができます。
 
-また、`src/lib/assets/bottle.png`は、[tabler-icons](https://github.com/tabler/tabler-icons/tree/2dc43bb09ee70e2577ec22948f139978626363eb) ([MIT ライセンス](https://github.com/tabler/tabler-icons/tree/2dc43bb09ee70e2577ec22948f139978626363eb/LICENSE)) から取得したファイルです。
+また、`src/lib/assets/bottle.webp`は、[tabler-icons](https://github.com/tabler/tabler-icons/tree/2dc43bb09ee70e2577ec22948f139978626363eb) ([MIT ライセンス](https://github.com/tabler/tabler-icons/tree/2dc43bb09ee70e2577ec22948f139978626363eb/LICENSE)) から取得し、変換されたファイルです。
 
 ```
 MIT License
