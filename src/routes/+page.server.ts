@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ data, fetch }): PageServerLoad<any> => {
+export const load = (async ({ fetch }) => {
 	const query: string =
 		'[out:json][timeout:25]; \
 way(id:183555030); \
