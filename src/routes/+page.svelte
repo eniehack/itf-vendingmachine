@@ -75,6 +75,7 @@
 	});
 </script>
 
+<svelte:head>
 <MetaTags
 	title="筑波大学 自販機 Map"
 	openGraph={{
@@ -96,6 +97,7 @@
 		cardType: 'summary'
 	}}
 />
+</svelte:head>
 
 <div class="map-container">
 	<div id="map" />
