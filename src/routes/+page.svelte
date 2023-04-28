@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import 'leaflet/dist/leaflet.css';
-	import { LatLng, type Map as LFMap } from 'leaflet';
 	import { here } from '$lib/geo';
 	import { VendingMachine } from '$lib/vendingMachine';
 	import BottleImage from '$lib/assets/bottle.webp';
@@ -12,13 +10,13 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
-
-	let map: LFMap;
 	let coordWatchID: number;
 
 	onMount(async () => {
 		if (browser) {
 			const L = await import('leaflet');
+			
+			let map: L.Map;
 			let bottleIcon = L.icon({
 				iconUrl: BottleImage,
 				iconSize: [36, 36]
@@ -33,12 +31,12 @@
 			if ('geolocation' in navigator) {
 				navigator.geolocation.getCurrentPosition((position) => {
 					//console.debug(position);
-					here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+					here.set(new L.LatLng(position.coords.latitude, position.coords.longitude));
 				});
 
 				coordWatchID = navigator.geolocation.watchPosition((position) => {
 					//console.debug(position);
-					here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+					here.set(new L.LatLng(position.coords.latitude, position.coords.longitude));
 				});
 			}
 
@@ -109,6 +107,8 @@
 {/await}
 
 <style lang="scss">
+	@import 'leaflet/dist/leaflet.css';
+
 	#map {
 		position: absolute;
 		top: 0;
