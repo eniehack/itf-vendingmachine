@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
+	import 'leaflet/dist/leaflet.css';
 	import { here } from '$lib/geo';
 	import { VendingMachine } from '$lib/vendingMachine';
 	import BottleImage from '$lib/assets/bottle.webp';
@@ -107,7 +108,7 @@
 {/await}
 
 <style lang="scss">
-	@import 'leaflet/dist/leaflet.css';
+	@use 'bulma/sass/utilities/mixins.sass' as util;
 
 	#map {
 		position: absolute;
@@ -117,9 +118,7 @@
 		width: 100% !important;
 	}
 
-	@import 'bulma/sass/utilities/mixins.sass';
-
-	@include mobile {
+	@include util.mobile {
 		.map-container {
 			position: relative;
 			padding-bottom: 205%;
@@ -128,7 +127,7 @@
 		}
 	}
 
-	@include tablet-only {
+	@include util.tablet-only {
 		.map-container {
 			position: relative;
 			padding-bottom: 125%;
@@ -137,7 +136,7 @@
 		}
 	}
 
-	@include desktop {
+	@include util.desktop {
 		.map-container {
 			position: relative;
 			padding-bottom: 49%;
