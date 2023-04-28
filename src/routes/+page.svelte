@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import 'leaflet/dist/leaflet.css';
-	import L from 'leaflet';
 	import { LatLng, type Map as LFMap } from 'leaflet';
 	import { here } from '$lib/geo';
 	import { VendingMachine } from '$lib/vendingMachine';
@@ -24,6 +23,7 @@
 
 	onMount(() => {
 		if (browser) {
+			const L = require('leaflet');
 			//console.log(data);
 			map = L.map('map').setView([36.107, 140.1019], 13);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
