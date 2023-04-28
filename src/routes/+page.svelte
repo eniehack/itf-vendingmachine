@@ -16,14 +16,13 @@
 	let map: LFMap;
 	let coordWatchID: number;
 
-	let bottleIcon = L.icon({
-		iconUrl: BottleImage,
-		iconSize: [36, 36]
-	});
-
-	onMount(() => {
+	onMount(async () => {
 		if (browser) {
-			const L = require('leaflet');
+			const L = await import('leaflet');
+			let bottleIcon = L.icon({
+				iconUrl: BottleImage,
+				iconSize: [36, 36]
+			});
 			//console.log(data);
 			map = L.map('map').setView([36.107, 140.1019], 13);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
