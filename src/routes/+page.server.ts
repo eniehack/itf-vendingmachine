@@ -3,7 +3,7 @@ import type { PageServerLoad } from "./$types";
 
 export const ssr = true;
 export const csr = true;
-export const prerender = true;
+//export const prerender = true;
 
 export const load = (async ({ fetch, setHeaders }) => {
 	const query: string =
