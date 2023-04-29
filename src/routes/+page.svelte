@@ -49,9 +49,9 @@
 		});
 
 		here.subscribe((coord) => {
-			if (coord === null) return;
+			if (coord === undefined) return;
 			//console.debug(coord);
-			map.flyTo($here);
+			map.flyTo(coord);
 		});
 
 		return {
