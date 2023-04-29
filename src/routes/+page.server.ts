@@ -1,9 +1,20 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
 
-export const ssr = true;
-export const csr = true;
-//export const prerender = true;
+type OSMObject = {
+	type: "node",
+	id: number,
+	lat: number,
+	lon: number,
+	tags: Object
+}
+
+type Payload = {
+	version: number,
+	generator: string,
+	osm3s: Object,
+	elements: OSMObject[]
+}
 
 export const load = (async ({ fetch, setHeaders }) => {
 	const query: string =
@@ -29,11 +40,13 @@ out;';
 	});
 
 	if (resp.ok) {
-		let json = await resp.json();
+		let json = await resp.json() as Payload;
 		setHeaders({
 			'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
 		});
-		return json["elements"];
+		return {
+			nodes: json.elements
+		}
 	} else {
 		let text = await resp.text();
 		throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');

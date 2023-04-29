@@ -14,12 +14,12 @@
 	export let data: PageData;
 
 	const map_init = (node: HTMLElement) => {
-			//console.log(data);
+		//console.log(data);
 		let map: LMap = L.map(node).setView([36.107, 140.1019], 13);
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom: 19,
-				attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
-			}).addTo(map);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
+		}).addTo(map);
 
 		let bottleIcon = L.icon({
 			iconUrl: BottleImage,
@@ -27,49 +27,48 @@
 		});
 
 		let coordWatchID: number;
-			if ('geolocation' in navigator) {
-				navigator.geolocation.getCurrentPosition((position) => {
-					//console.debug(position);
+		if ('geolocation' in navigator) {
+			navigator.geolocation.getCurrentPosition((position) => {
+				//console.debug(position);
 				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-				});
-				coordWatchID = navigator.geolocation.watchPosition((position) => {
-					//console.debug(position);
-				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-				});
-			}
-
-			let vendingmachines: Array<VendingMachine> = [];
-			if (!dev) {
-				for (const [_, v] of Object.entries(data)) {
-					vendingmachines.push(new VendingMachine(v));
-				}
-			} else {
-				data.body.forEach(elem => {
-					vendingmachines.push(new VendingMachine(elem));
-				});
-			}
-			console.log(vendingmachines);
-			vendingmachines.forEach(vm => {
-				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
-				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
 			});
+			coordWatchID = navigator.geolocation.watchPosition((position) => {
+				//console.debug(position);
+				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+			});
+		}
+		
+		let vendingmachines: Array<VendingMachine> = [];
+		if (!dev) {
+			for (const [_, v] of Object.entries(data)) {
+				vendingmachines.push(new VendingMachine(v));
+			}
+		} else {
+			data.nodes.forEach((elem: Object) => {
+				vendingmachines.push(new VendingMachine(elem));
+			});
+		}
+		console.log(vendingmachines);
+		vendingmachines.forEach(vm => {
+			let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
+			let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
+		});
 
 		here.subscribe((coord) => {
 			if (coord === null) return;
 			//console.debug(coord);
 			map.flyTo($here);
-	});
+		});
 
 		return {
 			destroy() {
 				if (map) map.remove();
-			navigator.geolocation.clearWatch(coordWatchID);
-		}
+				navigator.geolocation.clearWatch(coordWatchID);
+			}
 		}
 	}
 </script>
 
-<svelte:head>
 <MetaTags
 	title="筑波大学 自販機 Map"
 	openGraph={{
@@ -91,10 +90,9 @@
 		cardType: 'summary'
 	}}
 />
-</svelte:head>
 
 <div class="map-container">
-	<div id="map" />
+	<div use:map_init id="map" />
 </div>
 
 {#await $here}
