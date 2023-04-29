@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import 'leaflet/dist/leaflet.css';
 	import { here } from '$lib/geo';
 	import { VendingMachine } from '$lib/vendingMachine';
 	import BottleImage from '$lib/assets/bottle.webp';
@@ -9,43 +8,35 @@
 	import ogpImage from '$lib/assets/ogp.jpg';
 	import { browser, dev } from '$app/environment';
 	import type { PageData } from './$types';
+	import L, { LatLng, type Map as LMap } from "leaflet";
+	import 'leaflet/dist/leaflet.css';
 
 	export let data: PageData;
-	let coordWatchID: number;
 
-	onMount(async () => {
-		if (browser) {
-			const L = await import('leaflet');
-			
-			let map: L.Map;
-			let bottleIcon = L.icon({
-				iconUrl: BottleImage,
-				iconSize: [36, 36]
-			});
+	const map_init = (node: HTMLElement) => {
 			//console.log(data);
-			map = L.map('map').setView([36.107, 140.1019], 13);
+		let map: LMap = L.map(node).setView([36.107, 140.1019], 13);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				maxZoom: 19,
 				attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
 			}).addTo(map);
 
+		let bottleIcon = L.icon({
+			iconUrl: BottleImage,
+			iconSize: [36, 36]
+		});
+
+		let coordWatchID: number;
 			if ('geolocation' in navigator) {
 				navigator.geolocation.getCurrentPosition((position) => {
 					//console.debug(position);
-					here.set(new L.LatLng(position.coords.latitude, position.coords.longitude));
+				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
 				});
-
 				coordWatchID = navigator.geolocation.watchPosition((position) => {
 					//console.debug(position);
-					here.set(new L.LatLng(position.coords.latitude, position.coords.longitude));
+				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
 				});
 			}
-
-			here.subscribe((coord) => {
-				if (coord === null) return;
-				//console.debug(coord);
-				map.flyTo($here);
-			});
 
 			let vendingmachines: Array<VendingMachine> = [];
 			if (!dev) {
@@ -58,19 +49,24 @@
 				});
 			}
 			console.log(vendingmachines);
-
 			vendingmachines.forEach(vm => {
 				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
 				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
 			});
-		}
+
+		here.subscribe((coord) => {
+			if (coord === null) return;
+			//console.debug(coord);
+			map.flyTo($here);
 	});
 
-	onDestroy(() => {
-		if (browser) {
+		return {
+			destroy() {
+				if (map) map.remove();
 			navigator.geolocation.clearWatch(coordWatchID);
 		}
-	});
+		}
+	}
 </script>
 
 <svelte:head>
