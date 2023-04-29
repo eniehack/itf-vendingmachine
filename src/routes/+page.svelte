@@ -37,7 +37,7 @@
 				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
 			});
 		}
-		
+		console.log(data.nodes);
 		let vendingmachines: Array<VendingMachine> = [];
 		if (!dev) {
 			for (const [_, v] of Object.entries(data)) {
