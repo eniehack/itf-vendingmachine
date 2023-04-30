@@ -1,14 +1,12 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
 	import { here } from '$lib/geo';
 	import { VendingMachine } from '$lib/vendingMachine';
 	import BottleImage from '$lib/assets/bottle.webp';
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
-	import { browser, dev } from '$app/environment';
 	import type { PageData } from './$types';
-	import L, { LatLng, type Map as LMap } from "leaflet";
+	import L, { type Map as LMap } from "leaflet";
 	import 'leaflet/dist/leaflet.css';
 
 	export let data: PageData;
@@ -25,18 +23,6 @@
 			iconUrl: BottleImage,
 			iconSize: [36, 36]
 		});
-
-		let coordWatchID: number;
-		if ('geolocation' in navigator) {
-			navigator.geolocation.getCurrentPosition((position) => {
-				//console.debug(position);
-				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-			});
-			coordWatchID = navigator.geolocation.watchPosition((position) => {
-				//console.debug(position);
-				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-			});
-		}
 
 		let vendingmachines: Array<VendingMachine> = [];
 		data.nodes.forEach(elem => {
@@ -57,7 +43,6 @@
 		return {
 			destroy() {
 				if (map) map.remove();
-				navigator.geolocation.clearWatch(coordWatchID);
 			}
 		}
 	}
