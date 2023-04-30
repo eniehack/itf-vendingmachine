@@ -1,51 +1,21 @@
 <script lang="ts">
 	import { here } from '$lib/geo';
-	import { VendingMachine } from '$lib/vendingMachine';
-	import BottleImage from '$lib/assets/bottle.webp';
 	import { MetaTags } from 'svelte-meta-tags';
 	import { base } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
 	import type { PageData } from './$types';
-	import L, { type Map as LMap } from "leaflet";
 	import 'leaflet/dist/leaflet.css';
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
+
+	let map_constructor;
+	onMount(async () => {
+		if (browser) {
+			map_constructor = await import("./map");
+		}
+	});
 
 	export let data: PageData;
-
-	const map_init = (node: HTMLElement) => {
-		//console.log(data);
-		let map: LMap = L.map(node).setView([36.107, 140.1019], 13);
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			maxZoom: 19,
-			attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
-		}).addTo(map);
-
-		let bottleIcon = L.icon({
-			iconUrl: BottleImage,
-			iconSize: [36, 36]
-		});
-
-		let vendingmachines: Array<VendingMachine> = [];
-		data.nodes.forEach(elem => {
-			vendingmachines.push(new VendingMachine(elem));
-		});
-
-		vendingmachines.forEach(vm => {
-			let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
-			let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
-		});
-
-		here.subscribe((coord) => {
-			if (coord === undefined) return;
-			//console.debug(coord);
-			map.flyTo(coord);
-		});
-
-		return {
-			destroy() {
-				if (map) map.remove();
-			}
-		}
-	}
 </script>
 
 <MetaTags
@@ -71,7 +41,7 @@
 />
 
 <div class="map-container">
-	<div use:map_init id="map" />
+	<div use:map_constructor={data} id="map" />
 </div>
 
 {#await $here}
