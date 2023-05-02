@@ -138,10 +138,10 @@
 
 	@include desktop {
 		.map-container {
-			position: relative;
-			padding-bottom: 49%;
-			height: 0;
-			overflow: hidden;
+			position: absolute;
+			top: 55px;
+			bottom: 0;
+			width: 100%;
 		}
 	}
 </style>
