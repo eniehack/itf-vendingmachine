@@ -75,6 +75,19 @@ export class VendingMachine {
 		}
 	}
 
+	isIndoor(): boolean {
+		return (typeof this.tags.get("indoor") !== "undefined" && this.tags.get("indoor") === "yes")
+	}
+
+	generatePopupText(): string {
+		let text = `<p>売っているもの: ${this.getHumanizedVendingType()}</p>`;
+		text += `<p>決済手段: ${this.getHumanizedPaymentsType()}</p>`;
+		if (this.isIndoor() && typeof this.tags.get("level") !== "undefined") {
+			text += `<p>${Number(this.tags.get("level")) + 1}階</p>`
+		}
+		return text;
+	}
+
 	toObject(): Object {
 		let out = {};
 		let tags = {};
