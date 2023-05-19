@@ -62,8 +62,9 @@
 			console.log(vendingmachines);
 
 			vendingmachines.forEach(vm => {
-				let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
-				let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
+				let marker = L.marker(vm.getPosition(), { icon: bottleIcon })
+					.addTo(map)
+					.bindPopup(vm.generatePopupText());
 			});
 		}
 	});

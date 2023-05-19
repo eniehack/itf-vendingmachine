@@ -1,12 +1,18 @@
 import { LatLng } from 'leaflet';
 import { readable, type Readable } from 'svelte/store';
 
+type VendingMachineAsObject = {
+	tags: Object
+	lat: number
+	lon: number
+}
+
 export class VendingMachine {
 	private tags: Map<string, string>;
 	public lat: number;
 	public lng: number;
 
-	constructor(elem: Object) {
+	constructor(elem: VendingMachineAsObject) {
 		this.tags = new Map(Object.entries(elem['tags']));
 		this.lat = elem['lat'];
 		this.lng = elem['lon'];
@@ -17,7 +23,7 @@ export class VendingMachine {
 	}
 
 	getPaymentsType(): string[] {
-		let payments = [];
+		let payments: string[] = [];
 		this.tags.forEach((v, k) => {
 			if (k.startsWith('payment:') && v === 'yes') {
 				payments.push(k.substring(8));
@@ -45,8 +51,9 @@ export class VendingMachine {
 		}
 
 		return payments.map((payment) => {
-			if (payment_map.has(payment)) {
-				return payment_map.get(payment);
+			let exist = payment_map.get(payment)
+			if (typeof exist === "string") {
+				return exist;
 			} else {
 				return payment;
 			}
@@ -58,7 +65,9 @@ export class VendingMachine {
 	}
 
 	getHumanizedVendingType(): string {
-		let vending = this.getVending();
+		const vending = this.getVending();
+		if (typeof vending === "undefined") return '不明';
+
 		const vending_map = new Map<string, string>([
 			['drinks', '飲料'],
 			['food', '食品'],
@@ -66,24 +75,35 @@ export class VendingMachine {
 			['bread', 'パン']
 		]);
 
-		if (vending === undefined) {
-			return '不明';
-		} else if (vending_map.has(vending)) {
-			return vending_map.get(vending);
-		} else {
+		const exists = vending_map.get(vending);
+		if (typeof exists === "undefined") {
 			return vending;
-		}
+		} 
+		return exists
 	}
 
-	toObject(): Object {
-		let out = {};
-		let tags = {};
-		for (let [k, v] of this.tags) tags[k] = v;
-		out['lat'] = this.lat;
-		out['lon'] = this.lng;
-		out['tags'] = tags;
+	isIndoor(): boolean {
+		return (typeof this.tags.get("indoor") !== "undefined" && this.tags.get("indoor") === "yes")
+	}
 
-		return out;
+	generatePopupText(): string {
+		let text = `<p>売っているもの: ${this.getHumanizedVendingType()}</p>`;
+		text += `<p>決済手段: ${this.getHumanizedPaymentsType()}</p>`;
+		if (this.isIndoor() && typeof this.tags.get("level") !== "undefined") {
+			text += `<p>${Number(this.tags.get("level")) + 1}階</p>`
+		}
+		return text;
+	}
+
+	toObject(): VendingMachineAsObject {
+		let tags: Object = {};
+		for (let [k, v] of this.tags.entries()) tags = {...tags, [k]: v};
+		
+		return {
+			lat: this.lat,
+			lon: this.lng,
+			tags: tags,
+		};
 	}
 }
 
