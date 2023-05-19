@@ -46,20 +46,14 @@
 			here.subscribe((coord) => {
 				if (coord === null) return;
 				//console.debug(coord);
-				map.flyTo($here);
+				map.flyTo(coord);
 			});
 
 			let vendingmachines: Array<VendingMachine> = [];
-			if (!dev) {
-				for (const [_, v] of Object.entries(data)) {
-					vendingmachines.push(new VendingMachine(v));
-				}
-			} else {
-				data.body.forEach(elem => {
-					vendingmachines.push(new VendingMachine(elem));
-				});
-			}
-			console.log(vendingmachines);
+			data.nodes.forEach(elem => {
+				vendingmachines.push(new VendingMachine(elem));
+			});
+			//console.log(vendingmachines);
 
 			vendingmachines.forEach(vm => {
 				let marker = L.marker(vm.getPosition(), { icon: bottleIcon })

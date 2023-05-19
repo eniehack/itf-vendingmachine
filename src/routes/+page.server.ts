@@ -1,6 +1,21 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
 
+type OSMObject = {
+	type: "node",
+	id: number,
+	lat: number,
+	lon: number,
+	tags: Object
+}
+
+type Payload = {
+	version: number,
+	generator: string,
+	osm3s: Object,
+	elements: OSMObject[]
+}
+
 export const load = (async ({ fetch, setHeaders }) => {
 	const query: string =
 		'[out:json][timeout:25]; \
@@ -24,14 +39,13 @@ out;';
 		body: query
 	});
 
-	if (resp.ok) {
-		let json = await resp.json();
-		setHeaders({
-			'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
-		});
-		return json["elements"];
-	} else {
-		let text = await resp.text();
+	if (!resp.ok) {
 		throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
 	}
+	
+	let json = await resp.json() satisfies Payload;
+	setHeaders({
+		'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
+	});
+	return { nodes: json.elements } satisfies { nodes: OSMObject[] };
 }) satisfies PageServerLoad;
