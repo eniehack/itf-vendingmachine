@@ -23,7 +23,7 @@
 		<div id="navbar-content" class="navbar-menu" class:is-active={is_navbar_toggled}>
 			<div class="navbar-start">
 				<a href="/about" class="navbar-item">about</a>
-				<a href="/contribute" class="navbar-item">このサイトに貢献する</a>
+				<a href="/about/contribute" class="navbar-item">このサイトに貢献する</a>
 			</div>
 			<div class="navbar-end">
 				<a class="navbar-item" href="https://github.com/eniehack/itf-vendingmachine">GitHub</a>
