@@ -1,0 +1,48 @@
+--- 
+import ogpImage from '../assets/ogp.jpg';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Astro description">
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="og:type" content="website" />
+		<meta name="og:title" content=`${title} - 筑波大学 自販機 Map` />
+		<meta name="og:description" content="筑波大学構内の自動販売機の場所を一覧できるサイト" />
+		<meta name="og:locale" content="ja_JP" />
+		<meta name="og:images" content={ogpImage} />
+		<meta name="twitter:site" content="@eniehack" />
+		<meta name="twitter:card" content="summary" />
+		<title>{title} - 筑波大学 自販機 Map</title>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+<style is:global>
+	:root {
+		--accent: 136, 58, 234;
+		--accent-light: 224, 204, 250;
+		--accent-dark: 49, 10, 101;
+		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), rgb(var(--accent-light)) 30%, white 60%);
+	}
+	html {
+		font-family: system-ui, sans-serif;
+		background: #13151A;
+		background-size: 224px;
+	}
+	code {
+		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+			Bitstream Vera Sans Mono, Courier New, monospace;
+	}
+</style>
