@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
 	import 'leaflet/dist/leaflet.css';
+	import PointImage from "../assets/point.svg";
 	import L from 'leaflet';
 	import { LatLng, type Map as LFMap } from 'leaflet';
 	import { here } from '../lib/geo';
@@ -25,7 +26,19 @@
 				maxZoom: 19,
 				attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
 			}).addTo(map);
-
+		let coordBtnControl = L.Control.extend({
+			onAdd: (map: LFMap) => {
+				const container = L.DomUtil.create("div", "leaflet-bar");
+				const btn = L.DomUtil.create("a");
+				btn.innerHTML = `<img src="${PointImage}" width="20" height="20"/>`;
+				container.appendChild(btn);
+				L.DomEvent.on(container, "click", () => {
+					map.flyTo($here);
+				});
+				return container;
+			}
+		});
+		(new coordBtnControl({ position: "topleft" })).addTo(map);
 			if ('geolocation' in navigator) {
 				navigator.geolocation.getCurrentPosition((position) => {
 					//console.debug(position);
@@ -37,12 +50,6 @@
 					here.set(new LatLng(position.coords.latitude, position.coords.longitude));
 				});
 			}
-
-			here.subscribe((coord) => {
-				if (coord === null) return;
-				//console.debug(coord);
-				map.flyTo(coord);
-			});
 
 			let resp = await fetch(endpoint);
 			console.log(resp.ok);
