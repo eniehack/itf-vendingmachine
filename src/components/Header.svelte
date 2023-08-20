@@ -1,12 +1,6 @@
 <script lang="ts">
- 	var is_navbar_toggled = false;
+    var is_navbar_toggled = false;
 </script>
-
-<style lang="scss">
-@import "bulma/sass/utilities/controls.sass";
-@import "bulma/sass/utilities/extends.sass";
-@import "bulma/sass/components/navbar.sass";
-</style>
 
 <header>
 	<nav class="navbar" role="navigation" aria-label="main navigation">
@@ -29,7 +23,7 @@
 		<div id="navbar-content" class="navbar-menu" class:is-active={is_navbar_toggled}>
 			<div class="navbar-start">
 				<a href="/about" class="navbar-item">about</a>
-				<a href="/contribute" class="navbar-item">このサイトに貢献する</a>
+				<a href="/about/contribute" class="navbar-item">このサイトに貢献する</a>
 			</div>
 			<div class="navbar-end">
 				<a class="navbar-item" href="https://github.com/eniehack/itf-vendingmachine">GitHub</a>
@@ -37,3 +31,9 @@
 		</div>
 	</nav>
 </header>
+
+<style lang="scss">
+@import "bulma/sass/utilities/controls.sass";
+@import "bulma/sass/utilities/extends.sass";
+@import "bulma/sass/components/navbar.sass";
+</style>

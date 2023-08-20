@@ -3,27 +3,22 @@
 	import 'leaflet/dist/leaflet.css';
 	import L from 'leaflet';
 	import { LatLng, type Map as LFMap } from 'leaflet';
-	import { here } from '$lib/geo';
-	import { VendingMachine } from '$lib/vendingMachine';
-	import BottleImage from '$lib/assets/bottle.webp';
-	import { MetaTags } from 'svelte-meta-tags';
-	import { base } from '$app/paths';
-	import ogpImage from '$lib/assets/ogp.jpg';
-	import { browser, dev } from '$app/environment';
-	import type { PageData } from './$types';
+	import { here } from '../lib/geo';
+	import { VendingMachine } from '../lib/vendingMachine';
+	import type { OSMObject } from "../pages/api/vm.json";
 
-	export let data: PageData;
+	export let endpoint: string;
+	export let icon: string;
 
 	let map: LFMap;
 	let coordWatchID: number;
 
 	let bottleIcon = L.icon({
-		iconUrl: BottleImage,
+		iconUrl: icon,
 		iconSize: [36, 36]
 	});
 
-	onMount(() => {
-		if (browser) {
+	onMount(async () => {
 			//console.log(data);
 			map = L.map('map').setView([36.107, 140.1019], 13);
 			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -49,6 +44,14 @@
 				map.flyTo(coord);
 			});
 
+			let resp = await fetch(endpoint);
+			console.log(resp.ok);
+			if (!resp.ok) {
+    			console.log("自動販売機データの取得に失敗しました,リロードしてください");
+    			return;
+				}
+			let data: {nodes: OSMObject[]} = await resp.json();
+
 			let vendingmachines: Array<VendingMachine> = [];
 			data.nodes.forEach(elem => {
 				vendingmachines.push(new VendingMachine(elem));
@@ -60,37 +63,12 @@
 					.addTo(map)
 					.bindPopup(vm.generatePopupText());
 			});
-		}
 	});
 
 	onDestroy(() => {
-		if (browser) {
-			navigator.geolocation.clearWatch(coordWatchID);
-		}
+		navigator.geolocation.clearWatch(coordWatchID);
 	});
 </script>
-
-<MetaTags
-	title="筑波大学 自販機 Map"
-	openGraph={{
-		type: 'website',
-		url: base,
-		title: '筑波大学 自販機 Map',
-		description: '筑波大学構内の自動販売機の場所を一覧できるサイト',
-		locale: 'ja_JP',
-		images: [
-			{
-				url: ogpImage
-			}
-		]
-	}}
-	twitter={{
-		title: '筑波大学 自販機 Map',
-		description: '筑波大学構内の自動販売機の場所を一覧できるサイト',
-		handle: '@eniehack',
-		cardType: 'summary'
-	}}
-/>
 
 <div class="map-container">
 	<div id="map" />
