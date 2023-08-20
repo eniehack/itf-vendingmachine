@@ -2,7 +2,7 @@
 import Map from "./Map.svelte";
 import BottleImage from '../assets/bottle.webp';
 
-const endpoint = Astro.url + "/api/vm.json";
+const endpoint = Astro.site!.origin + "/api/vm.json";
 export const prerender = true;
 ---
 
