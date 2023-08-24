@@ -22,7 +22,8 @@
 		</div>
 		<div id="navbar-content" class="navbar-menu" class:is-active={is_navbar_toggled}>
 			<div class="navbar-start">
-				<a href="/about" class="navbar-item">about</a>
+				<a href="/about" class="navbar-item">このサイトについて</a>
+				<a href="/about/privacy" class="navbar-item">プライバシーポリシー</a>
 				<a href="/about/contribute" class="navbar-item">このサイトに貢献する</a>
 			</div>
 			<div class="navbar-end">
