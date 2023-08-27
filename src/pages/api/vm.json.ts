@@ -50,7 +50,7 @@ out;';
         body: JSON.stringify({nodes: json.elements} satisfies {nodes: OSMObject[]}),
         status: 200,
         headers: {
-            'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300',
+            'Cache-Control': 's-maxage=43200, stale-while-revalidate=500',
             "Content-Type": "application/json"
         }
     };
