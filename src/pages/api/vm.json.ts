@@ -17,16 +17,16 @@ type Payload = {
 
 export async function get() {
     const query: string =
-		'[out:json][timeout:50]; \
-way(id:183555030); \
-map_to_area-> .ulis; \
-way(id:183555029); \
-map_to_area -> .ut; \
-( \
-  node(area.ulis)[amenity=vending_machine]; \
-  node(area.ut)[amenity=vending_machine]; \
-); \
-out;';
+		`[out:json][timeout:50];
+way(id:183555030);
+map_to_area-> .ulis;
+way(id:183555029);
+map_to_area -> .ut;
+(
+  node(area.ulis)[amenity=vending_machine];
+  node(area.ut)[amenity=vending_machine];
+);
+out;`;
     const endpoint: URL = new URL('https://overpass-api.de/api/interpreter')
     endpoint.searchParams.append("data", query);
     console.log(endpoint.toString())
