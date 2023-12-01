@@ -82,12 +82,15 @@
         //console.log(vendingmachines);
 
         vendingmachines.forEach((vm) => {
+            /*
             const el = document.createElement("div");
             el.setAttribute("class", "marker");
+            */
 
             const popup = new Popup()
                 .setHTML(vm.generatePopupText());
-            let marker = new Marker({element: el})
+            //let marker = new Marker({element: el})
+            let marker = new Marker()
                 .setLngLat(vm.getPosition())
                 .setPopup(popup)
                 .addTo(map);
