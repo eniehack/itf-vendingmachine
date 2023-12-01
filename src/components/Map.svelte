@@ -3,11 +3,11 @@
     import "leaflet/dist/leaflet.css";
     import PointImage from "../assets/point.svg";
     import L from "leaflet";
-    import { LatLng, type Map as LFMap } from "leaflet";
+    //import { LatLng, type Map as LFMap } from "leaflet";
     import { here } from "../lib/geo";
     import { VendingMachine } from "../lib/vendingMachine";
     import type { OSMObject } from "../pages/api/vm.json";
-    import { Map as MLMap, Marker, Popup} from "maplibre-gl";
+    import { Map as MLMap, Marker, Popup, LngLat } from "maplibre-gl";
 
     export let endpoint: string;
     export let icon: string;
@@ -47,9 +47,9 @@
             navigator.geolocation.getCurrentPosition((position) => {
                 //console.debug(position);
                 here.set(
-                    new LatLng(
-                        position.coords.latitude,
+                    new LngLat(
                         position.coords.longitude,
+                        position.coords.latitude,
                     ),
                 );
             });
@@ -57,9 +57,9 @@
             coordWatchID = navigator.geolocation.watchPosition((position) => {
                 //console.debug(position);
                 here.set(
-                    new LatLng(
-                        position.coords.latitude,
+                    new LngLat(
                         position.coords.longitude,
+                        position.coords.latitude,
                     ),
                 );
             });
@@ -79,7 +79,7 @@
         data.nodes.forEach((elem) => {
             vendingmachines.push(new VendingMachine(elem));
         });
-        //console.log(vendingmachines);
+        console.log(vendingmachines);
 
         vendingmachines.forEach((vm) => {
             /*

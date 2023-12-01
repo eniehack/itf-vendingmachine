@@ -1,4 +1,4 @@
-import { LatLng } from 'leaflet';
+import { LngLat } from 'maplibre-gl';
 import { readable, type Readable } from 'svelte/store';
 
 type VendingMachineAsObject = {
@@ -18,8 +18,8 @@ export class VendingMachine {
 		this.lng = elem['lon'];
 	}
 
-	getPosition(): LatLng {
-		return new LatLng(this.lat, this.lng);
+	getPosition(): LngLat {
+		return new LngLat(this.lng, this.lat);
 	}
 
 	getPaymentsType(): string[] {
