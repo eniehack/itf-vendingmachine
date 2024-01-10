@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { MetaTags } from 'svelte-meta-tags';
 	import { base } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
 </script>
@@ -17,22 +16,16 @@
 	</section>
 </article>
 
-<MetaTags
-	title="about"
-	titleTemplate="%s | 筑波大学 自販機 Map"
-	openGraph={{
-		type: 'website',
-		url: base,
-		title: 'about | 筑波大学 自販機 Map',
-		description: '筑波大学構内の自動販売機の場所を一覧できるサイト',
-		images: [
-			{
-				url: ogpImage
-			}
-		]
-	}}
-	twitter={{
-		title: '筑波大学 自販機 Map',
-		description: '筑波大学構内の自動販売機の場所を一覧できるサイト'
-	}}
-/>
+<svelte:head>
+	<title>筑波大学 自販機 Map</title>
+	<meta name="og:title" content="about | 筑波大学 自販機 Map" />
+	<meta name="og:type" content="website" />
+	<meta name="og:url" content="{base}/" />
+	<meta name="og:locale" content="ja_JP" />
+	<meta name="og:images" content={ogpImage} />
+	<meta name="og:description" content="筑波大学構内の自動販売機の場所を一覧できるサイト" />
+	<meta name="twitter:title" content="about | 筑波大学 自販機 Map" />
+	<meta name="twitter:description" content="筑波大学構内の自動販売機の場所を一覧できるサイト" />
+	<meta name="twitter:creators" content="@eniehack" />
+	<meta name="twitter:card" content="summary" />
+</svelte:head>
