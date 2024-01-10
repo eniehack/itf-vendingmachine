@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const osmObject = z.object({
 	type: z.literal('node'),
@@ -19,7 +19,7 @@ export const payload = z.object({
 	version: z.number(),
 	generator: z.string(),
 	osm3s: osm3sObject,
-	elements: z.array(osmObject),
+	elements: z.array(osmObject)
 });
 
 export type Payload = z.infer<typeof payload>;

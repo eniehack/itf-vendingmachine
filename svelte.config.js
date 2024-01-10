@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-vercel';
-import sveltePreprocess from "svelte-preprocess";
-import purgecss from "@fullhuman/postcss-purgecss";
+import sveltePreprocess from 'svelte-preprocess';
+import purgecss from '@fullhuman/postcss-purgecss';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -12,8 +12,8 @@ const config = {
 				plugins: [
 					purgecss({
 						content: ['./src/**/*.html', './src/**/*.svelte'],
-    	    			whitelistPatterns: [/svelte-/],
-    	    			defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
+						whitelistPatterns: [/svelte-/],
+						defaultExtractor: (content) => content.match(/[\w-/:]+(?<!:)/g) || []
 					})
 				]
 			}
