@@ -12,17 +12,19 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@fullhuman/postcss-purgecss": "^5.0.0",
 		"@sveltejs/adapter-vercel": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
 		"@types/leaflet": "^1.9.8",
 		"bulma": "^0.9.4",
 		"leaflet": "^1.9.2",
+		"postcss": "^8.4.33",
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
 		"sass": "^1.57.1",
 		"svelte": "^3.54.0",
 		"svelte-check": "^2.7.1",
-		"svelte-preprocess": "^4.10.6",
+		"svelte-preprocess": "^4.10.7",
 		"tslib": "^2.3.1",
 		"typescript": "^4.9.4",
 		"vite": "^4.0.0"
