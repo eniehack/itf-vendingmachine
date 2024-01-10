@@ -13,8 +13,8 @@ const makeGeoJSON = (nodes: OSMObject[]): GeoJSONRoot => {
             }, {} as Record<string, string>),
             geometry: {
                 coordinates: [
+                    elem.lon,
                     elem.lat,
-                    elem.lon
                 ],
                 type: "Point"
             }

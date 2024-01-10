@@ -32,6 +32,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sveltejs/adapter-cloudflare": "^2.3.3",
+		"maplibre-gl": "^3.6.2",
 		"zod": "^3.22.4"
 	}
 }

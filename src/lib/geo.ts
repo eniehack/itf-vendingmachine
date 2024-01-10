@@ -1,4 +1,6 @@
 import { writable, type Writable } from 'svelte/store';
-import { LatLng } from 'leaflet';
+import maplibre from "maplibre-gl";
+const { LngLat } = maplibre;
+import type { LngLat } from "maplibre-gl";
 
-export const here: Writable<LatLng> = writable(new LatLng(36.107, 140.1019));
+export const here: Writable<LngLat> = writable(new LngLat(140.1019, 36.107));
