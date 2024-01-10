@@ -19,7 +19,7 @@ export class VendingMachine {
 	}
 
 	getPosition(): LngLat {
-		return new LngLat(this.lat, this.lng);
+		return new LngLat(this.lng, this.lat);
 	}
 
 	getPaymentsType(): string[] {
