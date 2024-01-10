@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { Map as MLMap, Marker, Popup, LngLat } from 'maplibre-gl';
-	import { here } from '$lib/geo';
-	import { VendingMachine } from '$lib/vendingMachine';
+	//import { VERCEL_URL } from "$env/static/private";
+	import { Map as MLMap, GeolocateControl, NavigationControl } from 'maplibre-gl';
+	import { here, insertMarker } from '$lib/geo';
 	//import BottleImage from "$lib/assets/bottle.png";
 	import { base } from '$app/paths';
 	import ogpImage from '$lib/assets/ogp.jpg';
@@ -17,7 +17,6 @@
 
 	let map: MLMap;
 	let mapElem: HTMLDivElement;
-	let coordWatchID: number;
 	export let data: PageData;
 
 	if (browser) {
@@ -25,43 +24,27 @@
 			map = new MLMap({
 				container: mapElem,
 				style: 'https://tile.openstreetmap.jp/styles/osm-bright-ja/style.json',
-				center: [140.1019, 36.107],
+				center: $here,
 				zoom: 13
 			});
+			map.addControl(
+				new GeolocateControl({
+					positionOptions: {
+						enableHighAccuracy: true
+					},
+					trackUserLocation: true
+				})
+			);
+			map.addControl(new NavigationControl());
+
 			/*
 			const bottleIcon = icon({
 				iconUrl: BottleImage,
 				iconSize: [36, 36]
 			});
 			*/
-			if ('geolocation' in navigator) {
-				navigator.geolocation.getCurrentPosition((position) => {
-					console.debug(position);
-					here.set(new LngLat(position.coords.longitude, position.coords.latitude));
-					//map.flyTo($here);
-				});
-				coordWatchID = navigator.geolocation.watchPosition((position) => {
-					console.debug(position);
-					here.set(new LngLat(position.coords.longitude, position.coords.latitude));
-				});
-			}
-			here.subscribe((coord) => {
-				if (coord === null) return;
-				//console.debug(coord);
-			});
-			console.log(data);
-			data.features.forEach((obj) => {
-				let vm = new VendingMachine(obj);
-				const el = document.createElement('div');
-				el.setAttribute('class', 'marker');
-				/*
-				el.style.backgroundImage = `url(http://${window.location.host}${BottleImage})`;
-				el.style.width = "36px";
-				el.style.height = "36px"; */
-				const popup = new Popup().setHTML(vm.generatePopupText());
-				//let m = new Marker({element: el})
-				new Marker().setLngLat(obj.geometry.coordinates).setPopup(popup).addTo(map);
-			});
+			const el = document.createElement('div');
+			insertMarker(map, data.features, el);
 		});
 
 		onDestroy(() => {
@@ -82,12 +65,12 @@
 	<meta name="twitter:description" content="筑波大学構内の自動販売機の場所を一覧できるサイト" />
 	<meta name="twitter:creators" content="@eniehack" />
 	<meta name="twitter:card" content="summary" />
-	<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" />
 </svelte:head>
 
 <div id="map" bind:this={mapElem} />
 
-<style>
+<style lang="scss">
+	@import 'maplibre-gl/dist/maplibre-gl.css';
 	#map {
 		height: 85vh;
 		width: 100vw;
