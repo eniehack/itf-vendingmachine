@@ -1,66 +1,59 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import 'leaflet/dist/leaflet.css';
-	import L from 'leaflet';
-	import { LatLng, type Map as LFMap } from 'leaflet';
-	import { here } from '$lib/geo';
+	import type { Map as LFMap, LatLng } from 'leaflet';
+	import { writable, type Writable } from 'svelte/store';
 	import { VendingMachine } from '$lib/vendingMachine';
-	import BottleImage from '$lib/assets/bottle.webp';
-	import { MetaTags } from 'svelte-meta-tags';
+	import BottleImage from "$lib/assets/bottle.webp";
 	import { base } from '$app/paths';
-	import ogpImage from '$lib/assets/ogp.jpg';
-	import { browser, dev } from '$app/environment';
-	import type { PageData } from './$types';
+	import ogpImage from "$lib/assets/ogp.jpg";
+	import { browser } from "$app/environment";
+	import type { PageData } from './$types';	
 
-	export let data: PageData;
+	const vending = new Map<string, string>([
+		['drinks', '飲料'],
+		['food', '食品'],
+		['ice_cream', 'アイスクリーム']
+	]);
 
 	let map: LFMap;
 	let coordWatchID: number;
+	let here: Writable<LatLng>;
+	export let data: PageData;
 
 	let bottleIcon = L.icon({
 		iconUrl: BottleImage,
 		iconSize: [36, 36]
 	});
 
-	onMount(() => {
-		if (browser) {
-			//console.log(data);
-			map = L.map('map').setView([36.107, 140.1019], 13);
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				maxZoom: 19,
-				attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
-			}).addTo(map);
-
-			if ('geolocation' in navigator) {
-				navigator.geolocation.getCurrentPosition((position) => {
-					//console.debug(position);
-					here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-				});
-
-				coordWatchID = navigator.geolocation.watchPosition((position) => {
-					//console.debug(position);
-					here.set(new LatLng(position.coords.latitude, position.coords.longitude));
-				});
-			}
-
-			here.subscribe((coord) => {
-				if (coord === null) return;
-				//console.debug(coord);
-				map.flyTo(coord);
+	onMount(async () => {
+		const L = await import('leaflet');
+		const { LatLng } = L;
+		here = writable(new LatLng(36.107, 140.1019));
+		map = L.map('map').setView([36.107, 140.1019], 13);
+		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; <a href="https://osm.org">OpenStreetMap</a> contributors'
+		}).addTo(map);
+		if ('geolocation' in navigator) {
+			navigator.geolocation.getCurrentPosition((position) => {
+				console.debug(position);
+				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
+				map.flyTo($here);
 			});
-
-			let vendingmachines: Array<VendingMachine> = [];
-			data.nodes.forEach(elem => {
-				vendingmachines.push(new VendingMachine(elem));
-			});
-			//console.log(vendingmachines);
-
-			vendingmachines.forEach(vm => {
-				let marker = L.marker(vm.getPosition(), { icon: bottleIcon })
-					.addTo(map)
-					.bindPopup(vm.generatePopupText());
+			coordWatchID = navigator.geolocation.watchPosition((position) => {
+				console.debug(position);
+				here.set(new LatLng(position.coords.latitude, position.coords.longitude));
 			});
 		}
+		here.subscribe((coord) => {
+			if (coord === null) return;
+			//console.debug(coord);
+		});
+		data.features.forEach((obj) => {
+			let vm = new VendingMachine(obj);
+			let text = `<p>売っているもの: ${vm.getHumanizedVendingType()}</p><p>決済手段: ${vm.getHumanizedPaymentsType()}</p>`;
+			let marker = L.marker(vm.getPosition(), { icon: bottleIcon }).addTo(map).bindPopup(text);
+		});
 	});
 
 	onDestroy(() => {
@@ -70,31 +63,27 @@
 	});
 </script>
 
-<MetaTags
-	title="筑波大学 自販機 Map"
-	openGraph={{
-		type: 'website',
-		url: base,
-		title: '筑波大学 自販機 Map',
-		description: '筑波大学構内の自動販売機の場所を一覧できるサイト',
-		locale: 'ja_JP',
-		images: [
-			{
-				url: ogpImage
-			}
-		]
-	}}
-	twitter={{
-		title: '筑波大学 自販機 Map',
-		description: '筑波大学構内の自動販売機の場所を一覧できるサイト',
-		handle: '@eniehack',
-		cardType: 'summary'
-	}}
-/>
+<svelte:head>
+	<title>筑波大学 自販機 Map</title>
+	<meta name="og:title" content="筑波大学 自販機 Map" />
+	<meta name="og:type" content="website" />
+	<meta name="og:url" content="{base}/" />
+	<meta name="og:locale" content="ja-JP" />
+	<meta name="og:images" content={ogpImage} />
+	<meta name="og:description" content="筑波大学構内の自動販売機の場所を一覧できるサイト" />
+	<meta name="twitter:title" content="筑波大学 自販機 Map" />
+	<meta name="twitter:description" content="筑波大学構内の自動販売機の場所を一覧できるサイト" />
+	<meta name="twitter:creators" content="@eniehack" />
+	<meta name="twitter:card" content="summary" />
+	<link
+		rel="stylesheet"
+		href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+		integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+		crossorigin=""
+	/>
+</svelte:head>
 
-<div class="map-container">
-	<div id="map" />
-</div>
+<div id="map" />
 
 {#await $here}
 	<p>位置情報取得中</p>
@@ -102,41 +91,9 @@
 	<p>位置情報取得エラー(エラーコード: {error.code}): {error.message}</p>
 {/await}
 
-<style lang="scss">
+<style>
 	#map {
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100% !important;
-		width: 100% !important;
-	}
-
-	@import 'bulma/sass/utilities/mixins.sass';
-
-	@include mobile {
-		.map-container {
-			position: relative;
-			padding-bottom: 205%;
-			height: 0;
-			overflow: hidden;
-		}
-	}
-
-	@include tablet-only {
-		.map-container {
-			position: relative;
-			padding-bottom: 125%;
-			height: 0;
-			overflow: hidden;
-		}
-	}
-
-	@include desktop {
-		.map-container {
-			position: relative;
-			padding-bottom: 49%;
-			height: 0;
-			overflow: hidden;
-		}
+		height: 85vh;
+		width: 100vw;
 	}
 </style>
