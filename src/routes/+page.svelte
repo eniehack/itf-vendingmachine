@@ -20,13 +20,12 @@
 	let here: Writable<LatLng>;
 	export let data: PageData;
 
-	let bottleIcon = L.icon({
-		iconUrl: BottleImage,
-		iconSize: [36, 36]
-	});
-
 	onMount(async () => {
 		const L = await import('leaflet');
+		let bottleIcon = L.icon({
+			iconUrl: BottleImage,
+			iconSize: [36, 36]
+		});
 		const { LatLng } = L;
 		here = writable(new LatLng(36.107, 140.1019));
 		map = L.map('map').setView([36.107, 140.1019], 13);
