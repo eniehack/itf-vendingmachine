@@ -14,6 +14,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^2.0.0",
 		"@sveltejs/kit": "^1.5.0",
+		"@types/leaflet": "^1.9.8",
 		"bulma": "^0.9.4",
 		"leaflet": "^1.9.2",
 		"prettier": "^2.6.2",
@@ -27,5 +28,9 @@
 		"typescript": "^4.9.4",
 		"vite": "^4.0.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"@sveltejs/adapter-cloudflare": "^2.3.3",
+		"zod": "^3.22.4"
+	}
 }

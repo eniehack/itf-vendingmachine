@@ -1,51 +1,57 @@
 import { error } from '@sveltejs/kit';
+import type { GeoJSONFeature, GeoJSONRoot } from '$lib/geojson';
 import type { PageServerLoad } from "./$types";
+import { payload, type OSMObject } from '$lib/overpass';
 
-type OSMObject = {
-	type: "node",
-	id: number,
-	lat: number,
-	lon: number,
-	tags: Object
+const makeGeoJSON = (nodes: OSMObject[]): GeoJSONRoot => {
+    let features = nodes.map((elem: OSMObject): GeoJSONFeature => {
+        return {
+            type: "Feature",
+            properties: Object.keys(elem.tags).reduce((acc, key) => {
+                acc[key] = elem.tags[key] as string;
+                return acc;
+            }, {} as Record<string, string>),
+            geometry: {
+                coordinates: [
+                    elem.lat,
+                    elem.lon
+                ],
+                type: "Point"
+            }
+        }
+    });
+    return {
+        type: "FeatureCollection",
+        features: features
+    } satisfies GeoJSONRoot;
 }
 
-type Payload = {
-	version: number,
-	generator: string,
-	osm3s: Object,
-	elements: OSMObject[]
-}
-
-export const load = (async ({ fetch, setHeaders }) => {
+export const load = (async ({ fetch, setHeaders }): Promise<GeoJSONRoot> => {
 	const query: string =
-		'[out:json][timeout:25]; \
-way(id:183555030); \
-map_to_area-> .ulis; \
-way(id:183555029); \
-map_to_area -> .ut; \
-( \
-  node(area.ulis)[amenity=vending_machine]; \
-  node(area.ut)[amenity=vending_machine]; \
-); \
-out;';
+		`[out:json][timeout:25];
+way(id:183555030);
+map_to_area-> .ulis;
+way(id:183555029);
+map_to_area -> .ut;
+(
+  node(area.ulis)[amenity=vending_machine];
+  node(area.ut)[amenity=vending_machine];
+);
+out;`;
 
-	let resp = await fetch('https://overpass-api.de/api/interpreter', {
-		method: 'POST',
-		mode: 'cors',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencode',
-			'Cache-Control': 'max-age=43200'
-		},
-		body: query
-	});
-
+    const endpoint = new URL('https://overpass-api.de/api/interpreter');
+    endpoint.searchParams.set("data", query);
+    let resp = await fetch(endpoint);
 	if (!resp.ok) {
 		throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
 	}
-	
-	let json = await resp.json() satisfies Payload;
-	setHeaders({
-		'Cache-Control': 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300' 
-	});
-	return { nodes: json.elements } satisfies { nodes: OSMObject[] };
+    
+    let json = payload.safeParse(await resp.json());
+    if (!json.success) {
+      throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
+    }
+    setHeaders({
+        "Cache-Control": 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300',
+    });
+    return makeGeoJSON(json.data.elements);
 }) satisfies PageServerLoad;
