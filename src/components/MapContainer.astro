@@ -1,9 +1,0 @@
----
-import Map from "./Map.svelte";
-import BottleImage from '../assets/bottle.webp';
-
-const endpoint = "/api/vm.json";
-export const prerender = true;
----
-
-<Map endpoint={endpoint} icon={BottleImage} client:only="svelte" />
