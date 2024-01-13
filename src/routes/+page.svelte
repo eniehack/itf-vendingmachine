@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	//import { VERCEL_URL } from "$env/static/private";
 	import { Map as MLMap, GeolocateControl, NavigationControl } from 'maplibre-gl';
 	import { here, insertMarker } from '$lib/geo';
@@ -8,12 +8,6 @@
 	import ogpImage from '$lib/assets/ogp.jpg';
 	import { browser } from '$app/environment';
 	import type { PageData } from './$types';
-
-	const vending = new Map<string, string>([
-		['drinks', '飲料'],
-		['food', '食品'],
-		['ice_cream', 'アイスクリーム']
-	]);
 
 	let map: MLMap;
 	let mapElem: HTMLDivElement;
@@ -45,10 +39,6 @@
 			*/
 			const el = document.createElement('div');
 			insertMarker(map, data.features, el);
-		});
-
-		onDestroy(() => {
-			navigator.geolocation.clearWatch(coordWatchID);
 		});
 	}
 </script>
