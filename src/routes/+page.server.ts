@@ -43,12 +43,12 @@ out;`;
     endpoint.searchParams.set("data", query);
     let resp = await fetch(endpoint);
 	if (!resp.ok) {
-		throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
+		error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
 	}
     
     let json = payload.safeParse(await resp.json());
     if (!json.success) {
-      throw error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
+      error(500, '自動販売機データの取得に失敗しました\nリロードしてください');
     }
     setHeaders({
         "Cache-Control": 'max-age=43200, public, s-maxage=300, stale-while-revalidate=300',
