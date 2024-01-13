@@ -32,5 +32,6 @@
 	"dependencies": {
 		"maplibre-gl": "^3.6.2",
 		"zod": "^3.22.4"
-	}
+	},
+	"packageManager": "pnpm@8.14.1"
 }
