@@ -57,12 +57,19 @@
 	<meta name="twitter:card" content="summary" />
 </svelte:head>
 
-<div id="map" bind:this={mapElem} />
+<div id="map-container">
+	<div id="map" bind:this={mapElem} />
+</div>
 
 <style lang="scss">
 	@import 'maplibre-gl/dist/maplibre-gl.css';
 	#map {
-		height: 85vh;
+		height: 100%;
 		width: 100vw;
+	}
+	#map-container {
+		position: fixed;
+		bottom: 0;
+		top: 53px;
 	}
 </style>
